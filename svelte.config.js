@@ -13,6 +13,8 @@ export default {
 			'$components/*': './src/lib/components/*',
 			'$hooks/*': './src/lib/hooks/*',
 			'$server/*': './src/lib/server/*',
+			'$schemas': './src/lib/schemas/index.ts',
+			'$schemas/*': './src/lib/schemas/*',
 		},
 	},
 };
