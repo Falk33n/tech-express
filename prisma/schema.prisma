@@ -2,7 +2,43 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Providers: postgresql, mysql, sqlite, sqlserver, mongodb or cockroachdb
 datasource db {
-  provider = env("SECRET_DATABASE_PROVIDER")
+  provider = "mysql"
   url      = env("SECRET_DATABASE_URL")
+}
+
+model ErrorLog {
+  id          String   @id @default(uuid())
+  message     String 
+  stackTrace  String?
+  path        String?
+  httpMethod  String?
+  timestamp   DateTime @default(now()) 
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  products  Product[] @relation("ProductCategories")
+}
+
+model ImageUrl {
+  id        String  @id @default(uuid())
+  url       String  @unique
+  product   Product @relation("ProductImages", fields: [productId], references: [id])
+  productId String
+}
+
+model Product {
+  id               String     @id @default(uuid())
+  name             String   
+  description      String   
+  price            Float    
+  quantity         Int      
+  categories       Category[] @relation("ProductCategories")
+  imageUrls        ImageUrl[] @relation("ProductImages")
+  imageDescription String 
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt 
 }
