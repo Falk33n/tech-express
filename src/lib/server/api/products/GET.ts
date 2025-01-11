@@ -15,8 +15,17 @@ async function getSingleProduct(id: string) {
 		);
 	}
 
+	const { categories, imageUrls, ...restProduct } = singleProduct;
+
 	return json(
-		{ success: true, data: singleProduct },
+		{
+			success: true,
+			data: {
+				categories: categories.map(({ name }) => name),
+				imageUrls: imageUrls.map(({ url }) => url),
+				...restProduct,
+			},
+		},
 		{ status: 200, statusText: 'OK' },
 	);
 }
@@ -42,7 +51,16 @@ async function getProductsInCategory(category: string) {
 	}
 
 	return json(
-		{ success: true, data: productsInCategory },
+		{
+			success: true,
+			data: productsInCategory.map(
+				({ categories, imageUrls, ...restProducts }) => ({
+					categories: categories.map(({ name }) => name),
+					imageUrls: imageUrls.map(({ url }) => url),
+					...restProducts,
+				}),
+			),
+		},
 		{ status: 200, statusText: 'OK' },
 	);
 }
@@ -60,7 +78,14 @@ async function getAllProducts() {
 	}
 
 	return json(
-		{ success: true, data: allProducts },
+		{
+			success: true,
+			data: allProducts.map(({ categories, imageUrls, ...restProducts }) => ({
+				categories: categories.map(({ name }) => name),
+				imageUrls: imageUrls.map(({ url }) => url),
+				...restProducts,
+			})),
+		},
 		{ status: 200, statusText: 'OK' },
 	);
 }

@@ -58,6 +58,8 @@ const productSchema = z
 	})
 	.extend(idSchema.shape);
 
+export const productGetSingleSchema = productSchema;
+export const productGetMultipleSchema = z.array(productSchema);
 export const productDeleteSchema = idSchema;
 export const productAddSchema = productSchema.omit({ id: true });
 export const productUpdateSchema = productAddSchema
