@@ -1,6 +1,5 @@
-import { db } from '$server/db';
-import { handleError } from '$server/utils';
-import { json } from '@sveltejs/kit';
+import { db } from '$lib/server/db';
+import { error, json } from '@sveltejs/kit';
 
 async function getSingleProduct(id: string) {
 	const singleProduct = await db.product.findUnique({
@@ -9,24 +8,20 @@ async function getSingleProduct(id: string) {
 	});
 
 	if (!singleProduct) {
-		return json(
-			{ success: false, message: 'Product not found' },
-			{ status: 404, statusText: 'Not Found' },
-		);
+		error(404, 'Product not found');
 	}
 
 	const { categories, imageUrls, ...restProduct } = singleProduct;
 
 	return json(
 		{
-			success: true,
 			data: {
 				categories: categories.map(({ name }) => name),
 				imageUrls: imageUrls.map(({ url }) => url),
 				...restProduct,
 			},
 		},
-		{ status: 200, statusText: 'OK' },
+		{ status: 200 },
 	);
 }
 
@@ -41,18 +36,11 @@ async function getProductsInCategory(category: string) {
 	});
 
 	if (productsInCategory.length === 0) {
-		return json(
-			{
-				success: false,
-				message: `Products not found in the specified category: ${category}`,
-			},
-			{ status: 404, statusText: 'Not Found' },
-		);
+		error(404, `Products not found in the specified category: ${category}`);
 	}
 
 	return json(
 		{
-			success: true,
 			data: productsInCategory.map(
 				({ categories, imageUrls, ...restProducts }) => ({
 					categories: categories.map(({ name }) => name),
@@ -61,7 +49,7 @@ async function getProductsInCategory(category: string) {
 				}),
 			),
 		},
-		{ status: 200, statusText: 'OK' },
+		{ status: 200 },
 	);
 }
 
@@ -71,40 +59,27 @@ async function getAllProducts() {
 	});
 
 	if (allProducts.length === 0) {
-		return json(
-			{ success: false, message: 'No products found' },
-			{ status: 404, statusText: 'Not Found' },
-		);
+		error(404, 'No products found');
 	}
 
 	return json(
 		{
-			success: true,
 			data: allProducts.map(({ categories, imageUrls, ...restProducts }) => ({
 				categories: categories.map(({ name }) => name),
 				imageUrls: imageUrls.map(({ url }) => url),
 				...restProducts,
 			})),
 		},
-		{ status: 200, statusText: 'OK' },
+		{ status: 200 },
 	);
 }
 
 export async function productGET(category: string | null, id?: string) {
-	try {
-		if (id) {
-			return getSingleProduct(id);
-		} else if (category) {
-			return getProductsInCategory(category);
-		}
-
-		return getAllProducts();
-	} catch (err) {
-		return handleError({
-			error: err,
-			responseMessage: 'Failed to retrieve product(s)',
-			httpMethod: 'GET',
-			path: '/api/products',
-		});
+	if (id) {
+		return getSingleProduct(id);
+	} else if (category) {
+		return getProductsInCategory(category);
 	}
+
+	return getAllProducts();
 }
