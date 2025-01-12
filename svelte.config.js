@@ -7,12 +7,10 @@ export default {
 	kit: {
 		adapter: adapter(),
 		alias: {
+			'$src': './src',
 			'$src/*': './src/*',
-			'$utils': './src/lib/utils.ts',
-			'$types': './src/lib/types.ts',
-			'$components/*': './src/lib/components/*',
-			'$hooks/*': './src/lib/hooks/*',
-			'$server/*': './src/lib/server/*',
+			'$lib': './src/lib',
+			'$lib/*': './src/lib/*',
 		},
 	},
 };
