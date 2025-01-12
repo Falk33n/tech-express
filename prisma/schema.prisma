@@ -2,8 +2,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Providers: postgresql, mysql, sqlite, sqlserver, mongodb or cockroachdb
 datasource db {
+  /// provider: "postgresql" | "mysql" | "sqlite" | "sqlserver" | "mongodb" | "cockroachdb"
   provider = "mysql"
   url      = env("SECRET_DATABASE_URL")
 }
@@ -11,34 +11,50 @@ datasource db {
 model ErrorLog {
   id          String   @id @default(uuid())
   message     String 
+  pathName    String
+  method      String?
   stackTrace  String?
-  path        String?
-  httpMethod  String?
-  timestamp   DateTime @default(now()) 
+  status      Int
+  createdAt   DateTime @default(now()) 
 }
 
-model Category {
+model Product {
+  id               String            @id @default(uuid())
+  name             String   
+  description      String 
+  imageDescription String 
+  price            Float    
+  quantity         Int      
+  categories       ProductCategory[] @relation("ProductCategories")
+  imageUrls        ProductImageUrl[] @relation("ProductImageUrls")
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt  
+}
+
+model ProductImageUrl {
+  id        String  @id @default(uuid())
+  url       String  @unique
+  productId String
+  product   Product @relation("ProductImageUrls", fields: [productId], references: [id])
+}
+
+model ProductCategory {
   id        String    @id @default(uuid())
   name      String    @unique
   products  Product[] @relation("ProductCategories")
 }
 
-model ImageUrl {
-  id        String  @id @default(uuid())
-  url       String  @unique
-  product   Product @relation("ProductImages", fields: [productId], references: [id])
-  productId String
+enum Role {
+  USER
+  ADMIN
 }
 
-model Product {
-  id               String     @id @default(uuid())
-  name             String   
-  description      String   
-  price            Float    
-  quantity         Int      
-  categories       Category[] @relation("ProductCategories")
-  imageUrls        ImageUrl[] @relation("ProductImages")
-  imageDescription String 
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt 
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  name           String
+  hashedPassword String
+  role           Role     @default(USER)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
