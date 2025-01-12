@@ -3,7 +3,7 @@ import {
 	productGET,
 	productPATCH,
 	productPOST,
-} from '$server/api/products';
+} from '$lib/server/api/products';
 import { type RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ params, url }) => {
