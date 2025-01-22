@@ -34,7 +34,7 @@ const errorLogSchema = z.object({
 });
 
 export const POST: RequestHandler = async ({ request }) => {
-	const parsedRequest = await errorLogSchema.safeParseAsync({
+	const parsedRequest = errorLogSchema.safeParse({
 		...(await request.json()),
 	});
 
