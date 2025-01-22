@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { FooterList, FooterSocialMediaList } from '$lib/components/ui/layout';
+	import { FooterList, FooterSocialMediaList } from '$lib/components/layout/ui';
 </script>
 
 <footer class="w-full border-t">
