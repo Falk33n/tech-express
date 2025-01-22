@@ -13,7 +13,7 @@ model ErrorLog {
   message     String 
   pathName    String
   method      String?
-  stackTrace  String?
+  stackTrace  String?  @db.Text
   status      Int
   createdAt   DateTime @default(now()) 
 }
