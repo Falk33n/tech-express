@@ -1,3 +1,4 @@
+import { NODE_ENV } from '$env/static/private';
 import { db } from '$lib/server/db';
 import type { RequestHandler } from '@sveltejs/kit';
 import { error, json } from '@sveltejs/kit';
@@ -34,24 +35,26 @@ const errorLogSchema = z.object({
 });
 
 export const POST: RequestHandler = async ({ request }) => {
-	const parsedRequest = errorLogSchema.safeParse({
-		...(await request.json()),
-	});
+	if (NODE_ENV !== 'development') {
+		const parsedRequest = errorLogSchema.safeParse({
+			...(await request.json()),
+		});
 
-	if (!parsedRequest.success) {
-		error(400, 'Invalid request body');
+		if (!parsedRequest.success) {
+			error(400, 'Invalid request body');
+		}
+
+		const { message, status, stackTrace, pathName } = parsedRequest.data;
+
+		await db.errorLog.create({
+			data: {
+				pathName,
+				message,
+				status,
+				stackTrace,
+			},
+		});
 	}
-
-	const { message, status, stackTrace, pathName } = parsedRequest.data;
-
-	await db.errorLog.create({
-		data: {
-			pathName,
-			message,
-			status,
-			stackTrace,
-		},
-	});
 
 	return json({ message: 'Error logged successfully' }, { status: 201 });
 };

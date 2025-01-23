@@ -1,4 +1,4 @@
-import { SECRET_JWT_STRING } from '$env/static/private';
+import { NODE_ENV, SECRET_JWT_STRING } from '$env/static/private';
 import { db } from '$src/lib/server/db';
 import { type Handle, type HandleServerError } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
@@ -24,17 +24,19 @@ export const handleError: HandleServerError = async ({
 	event,
 	status,
 }) => {
-	const stackTrace = error instanceof Error ? error.stack : undefined;
+	if (NODE_ENV !== 'development') {
+		const stackTrace = error instanceof Error ? error.stack : undefined;
 
-	await db.errorLog.create({
-		data: {
-			method: event.request.method,
-			pathName: event.url.pathname,
-			message,
-			status,
-			stackTrace,
-		},
-	});
+		await db.errorLog.create({
+			data: {
+				method: event.request.method,
+				pathName: event.url.pathname,
+				message,
+				status,
+				stackTrace,
+			},
+		});
+	}
 
 	return {
 		message,
