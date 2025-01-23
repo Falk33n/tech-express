@@ -54,6 +54,7 @@
 			@apply bg-primary text-primary-foreground;
 		}
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}
