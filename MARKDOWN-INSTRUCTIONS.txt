@@ -1,0 +1,38 @@
+Hello dear customer!
+
+
+Link on what Markdown (md) is:
+- https://www.markdownguide.org/getting-started/
+
+
+Link on how to write Markdown (md):
+- https://www.markdownguide.org/basic-syntax/
+
+
+The Markdown files is found by going to the static
+folder, then the markdown folder. This is were all the
+markdown files can be accessed and edited.
+
+You can use the following tags in your Markdown documents.
+They will automatically display the correct information.
+
+
+- $DATA_PROTECTION_OFFICER_EMAIL_ADDRESS = Shows the company's dpo email.
+- $SUPPORT_EMAIL_ADDRESS = Shows the company's support email.
+- $SUPPORT_PHONE_NUMBER = Shows the company's support phone number.
+- $HEADQUARTERS_ADDRESS = Shows the company's headquarters address.
+
+
+These tags pull their values from the .env file in the
+root of the project's folder structure. For example
+in the .env file, you will see lines like this:
+
+
+- PUBLIC_DATA_PROTECTION_OFFICER_EMAIL_ADDRESS="a-email-address"
+- PUBLIC_SUPPORT_EMAIL_ADDRESS="a-email-address"
+- PUBLIC_SUPPORT_PHONE_NUMBER="a-phone-number"
+- PUBLIC_HEADQUARTERS_ADDRESS="a-address"
+
+
+When you use the tags in your document, they will automatically
+use the values from the .env file.
