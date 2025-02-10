@@ -1,13 +1,7 @@
 import { Dialog as SheetPrimitive } from 'bits-ui';
 
-export const SheetPrimitiveRoot = SheetPrimitive.Root;
-export const SheetPrimitiveClose = SheetPrimitive.Close;
-export const SheetPrimitiveTrigger = SheetPrimitive.Trigger;
-export const SheetPrimitivePortal = SheetPrimitive.Portal;
-export const SheetPrimitiveDescription = SheetPrimitive.Description;
-export const SheetPrimitiveOverlay = SheetPrimitive.Overlay;
-export const SheetPrimitiveContent = SheetPrimitive.Content;
-export const SheetPrimitiveTitle = SheetPrimitive.Title;
+export const Sheet = SheetPrimitive.Root;
+export const SheetTrigger = SheetPrimitive.Trigger;
 
 export {
 	default as SheetContent,
