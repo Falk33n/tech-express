@@ -15,7 +15,7 @@
 
 <p
 	bind:this={ref}
-	class={cn('text-sm text-muted-foreground', className)}
+	class={cn('text-sm', className)}
 	{...props}
 >
 	{@render children?.()}
