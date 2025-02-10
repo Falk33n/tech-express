@@ -3,19 +3,20 @@
 		Categories,
 		Hero,
 		LatestProducts,
-		Newsletter,
 		PopularProducts,
 	} from '$lib/components/home';
-	import type { PageProps } from './$types';
+	import type { LayoutProps } from './$types';
 
-	let { data }: PageProps = $props();
+	let { data }: LayoutProps = $props();
 
 	const isProductsEmpty = data.products.length < 3;
+	const randomFourProducts = data.products
+		.sort(() => 0.5 - Math.random())
+		.slice(0, 4);
 	const latestThreeProducts = !isProductsEmpty ? data.products.slice(0, 3) : [];
 </script>
 
 <Hero />
-<PopularProducts />
+<PopularProducts {randomFourProducts} />
 <Categories />
 <LatestProducts {latestThreeProducts} />
-<Newsletter />
