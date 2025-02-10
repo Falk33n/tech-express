@@ -18,7 +18,7 @@
 <a
 	bind:this={ref}
 	class={cn(
-		'rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring [&_svg]:pointer-events-none [&_svg]:size-4',
+		'rounded-md transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring [&_svg]:pointer-events-none [&_svg]:size-4',
 		className,
 	)}
 	{rel}
