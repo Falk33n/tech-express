@@ -25,23 +25,17 @@
 </script>
 
 <script lang="ts">
-	import {
-		SheetOverlay,
-		SheetPrimitiveClose,
-		SheetPrimitiveContent,
-		SheetPrimitivePortal,
-	} from '$lib/components/ui/sheet';
+	import { XIcon } from '$lib/components/ui/icons';
+	import { SheetOverlay } from '$lib/components/ui/sheet';
 	import { cn } from '$lib/utils';
 	import {
-		type DialogContentProps as SheetPrimitiveContentProps,
-		type DialogPortalProps as SheetPrimitivePortalProps,
+		Dialog as SheetPrimitive,
 		type WithoutChildrenOrChild,
 	} from 'bits-ui';
-	import { X } from 'lucide-svelte';
 	import type { Snippet } from 'svelte';
 
-	type Props = WithoutChildrenOrChild<SheetPrimitiveContentProps> & {
-		portalProps?: SheetPrimitivePortalProps;
+	type Props = WithoutChildrenOrChild<SheetPrimitive.ContentProps> & {
+		portalProps?: SheetPrimitive.PortalProps;
 		side?: Side;
 		children: Snippet;
 	};
@@ -56,22 +50,19 @@
 	}: Props = $props();
 </script>
 
-<SheetPrimitivePortal {...portalProps}>
+<SheetPrimitive.Portal {...portalProps}>
 	<SheetOverlay />
-	<SheetPrimitiveContent
+	<SheetPrimitive.Content
 		bind:ref
 		class={cn(sheetVariants({ side }), className)}
 		{...props}
 	>
 		{@render children?.()}
-		<SheetPrimitiveClose
-			class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary"
-			aria-label="Stäng"
+		<SheetPrimitive.Close
+			class="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none"
+			aria-label="Close"
 		>
-			<X
-				aria-hidden
-				class="size-4"
-			/>
-		</SheetPrimitiveClose>
-	</SheetPrimitiveContent>
-</SheetPrimitivePortal>
+			<XIcon aria-hidden />
+		</SheetPrimitive.Close>
+	</SheetPrimitive.Content>
+</SheetPrimitive.Portal>
