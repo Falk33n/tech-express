@@ -13,7 +13,6 @@ export async function productDELETE(request: Request) {
 
 	const product = await db.product.findUnique({
 		where: { id: parsedRequest.data.id },
-		include: { categories: true, imageUrls: true },
 	});
 
 	if (!product) {
@@ -22,7 +21,6 @@ export async function productDELETE(request: Request) {
 
 	await db.product.delete({
 		where: { id: product.id },
-		include: { categories: true, imageUrls: true },
 	});
 
 	return json({ message: 'Product deleted successfully' }, { status: 200 });
