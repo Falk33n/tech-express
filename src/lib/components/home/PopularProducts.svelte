@@ -6,19 +6,27 @@
 	import { cn } from '$lib/utils';
 
 	type Props = {
-		latestThreeProducts: Product[];
+		randomFourProducts: Product[];
 	};
 
-	let { latestThreeProducts }: Props = $props();
+	let { randomFourProducts }: Props = $props();
 
-	const isProductsEmpty = latestThreeProducts.length < 3;
+	const isProductsEmpty = randomFourProducts.length < 4;
 </script>
 
-<section class="w-full border-y py-20">
-	<SectionHeading>Latest Products</SectionHeading>
-	<div class={cn('container grid gap-6', !isProductsEmpty && 'md:grid-cols-3')}>
+<section
+	id="popular-products"
+	class="w-full scroll-mt-16 border-y py-20"
+>
+	<SectionHeading>Popular Products</SectionHeading>
+	<div
+		class={cn(
+			'container grid gap-6',
+			!isProductsEmpty && 'sm:grid-cols-2 lg:grid-cols-4',
+		)}
+	>
 		{#if !isProductsEmpty}
-			{#each latestThreeProducts as { id, imageUrl, quantity, imageDescription, name, price }}
+			{#each randomFourProducts as { id, imageUrl, quantity, imageDescription, name, price }}
 				<ProductsCard
 					src={imageUrl}
 					alt={imageDescription}
@@ -31,8 +39,8 @@
 			{/each}
 		{:else}
 			<SectionAlert>
-				We could sadly not retrieve the latest products. Please try again in a
-				couple of minutes.
+				We could sadly not retrieve the most popular products. Please try again
+				in a couple of minutes.
 			</SectionAlert>
 		{/if}
 	</div>
