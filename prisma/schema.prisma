@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  /// provider: "postgresql" | "mysql" | "sqlite" | "sqlserver" | "mongodb" | "cockroachdb"
+  /// db providers: "postgresql" | "mysql" | "sqlite" | "sqlserver" | "mongodb" | "cockroachdb"
   provider = "mysql"
   url      = env("SECRET_DATABASE_URL")
 }
@@ -13,40 +13,34 @@ model ErrorLog {
   message     String 
   pathName    String
   method      String?
-  stackTrace  String?
+  stackTrace  String?  @db.Text
   status      Int
   createdAt   DateTime @default(now()) 
 }
 
+enum CategoryName {
+  monitors
+  phones
+  accessories
+  computers
+}
+
 model Product {
-  id               String            @id @default(uuid())
+  id               String       @id @default(uuid())
   name             String   
   description      String 
   imageDescription String 
+  imageUrl         String
   price            Float    
   quantity         Int      
-  categories       ProductCategory[] @relation("ProductCategories")
-  imageUrls        ProductImageUrl[] @relation("ProductImageUrls")
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt  
-}
-
-model ProductImageUrl {
-  id        String  @id @default(uuid())
-  url       String  @unique
-  productId String
-  product   Product @relation("ProductImageUrls", fields: [productId], references: [id])
-}
-
-model ProductCategory {
-  id        String    @id @default(uuid())
-  name      String    @unique
-  products  Product[] @relation("ProductCategories")
+  category         CategoryName
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt  
 }
 
 enum Role {
-  USER
-  ADMIN
+  user
+  admin
 }
 
 model User {
@@ -54,7 +48,7 @@ model User {
   email          String   @unique
   name           String
   hashedPassword String
-  role           Role     @default(USER)
+  role           Role     @default(user)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }

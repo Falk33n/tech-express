@@ -39,23 +39,18 @@ export const productSchema = z
 			})
 			.int('Quantity must be an integer.')
 			.min(0, 'Quantity must be greater than 0.'),
-		categories: z.array(
-			z
-				.string({
-					required_error: 'Categories is required.',
-					invalid_type_error: 'Categories must be an array of strings.',
-				})
-				.nonempty('Categories cannot be empty.'),
-		),
-		imageUrls: z.array(
-			z
-				.string({
-					required_error: 'Image URLs is required.',
-					invalid_type_error: 'Image URLs must be an array of strings.',
-				})
-				.nonempty('Image URLs cannot be empty.')
-				.url('Image URLs must be a valid URL.'),
-		),
+		category: z.enum(['monitors', 'phones', 'accessories', 'computers'], {
+			required_error: 'Category is required.',
+			invalid_type_error:
+				'Category must be either "monitors", "accessories", "phones" or "computers".',
+		}),
+		imageUrl: z
+			.string({
+				required_error: 'Image URL is required.',
+				invalid_type_error: 'Image URL must be a string.',
+			})
+			.nonempty('Image URLs cannot be empty.')
+			.url('Image URLs must be a valid URL.'),
 		imageDescription: z
 			.string({
 				required_error: 'Image Description is required.',

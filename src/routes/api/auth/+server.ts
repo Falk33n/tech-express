@@ -34,7 +34,7 @@ const THIRTY_DAYS = 30 * 24 * 60 * 60;
 const TWO_HOURS = 2 * 60 * 60;
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-	const parsedRequest = await authSchema.safeParseAsync({
+	const parsedRequest = authSchema.safeParse({
 		...(await request.json()),
 	});
 

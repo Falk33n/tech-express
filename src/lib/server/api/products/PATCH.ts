@@ -22,64 +22,19 @@ export async function productPATCH(request: Request) {
 
 	const product = await db.product.findUnique({
 		where: { id: parsedRequest.data.id },
-		include: { categories: true, imageUrls: true },
 	});
 
 	if (!product) {
 		error(404, 'Product not found');
 	}
 
-	/* eslint-disable @typescript-eslint/no-unused-vars */
-	const {
-		id,
-		categories,
-		imageUrls,
-		createdAt: _,
-		updatedAt: __,
-		...restProduct
-	} = product;
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+	const { id, createdAt: _, updatedAt: __, ...restProduct } = product;
 
 	const updatedProduct = await db.product.update({
 		where: { id },
-		data: {
-			...(categories &&
-				categories.length > 0 && {
-					categories: {
-						connectOrCreate: categories.map(({ name }) => ({
-							where: { name },
-							create: { name },
-						})),
-					},
-				}),
-			...(imageUrls &&
-				imageUrls.length > 0 && {
-					imageUrls: {
-						connectOrCreate: imageUrls.map(({ url }) => ({
-							where: { url },
-							create: { url },
-						})),
-					},
-				}),
-			...restProduct,
-		},
-		include: { categories: true, imageUrls: true },
+		data: { ...restProduct },
 	});
 
-	const {
-		categories: updatedCategories,
-		imageUrls: updatedImageUrls,
-		...restUpdatedProduct
-	} = updatedProduct;
-
-	return json(
-		{
-			data: {
-				categories: updatedCategories.map(({ name }) => name),
-				imageUrls: updatedImageUrls.map(({ url }) => url),
-				...restUpdatedProduct,
-			},
-		},
-		{ status: 200 },
-	);
+	return json({ data: { ...updatedProduct } }, { status: 200 });
 }
