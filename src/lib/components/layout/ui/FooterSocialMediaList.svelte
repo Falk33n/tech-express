@@ -1,13 +1,18 @@
 <script lang="ts">
+	import { FooterHeadingList } from '$lib/components/layout/ui';
 	import { buttonVariants } from '$lib/components/ui/button';
+	import {
+		FacebookIcon,
+		InstagramIcon,
+		YouTubeIcon,
+	} from '$lib/components/ui/icons';
 	import { Link } from '$lib/components/ui/link';
 	import { cn } from '$lib/utils';
-	import { FacebookIcon, InstagramIcon, XIcon } from 'lucide-svelte';
 
 	type LinkProps = {
 		href: string;
-		icon: typeof FacebookIcon | typeof InstagramIcon | typeof XIcon;
-		link: 'Facebook' | 'Instagram' | 'X';
+		icon: typeof FacebookIcon | typeof InstagramIcon | typeof YouTubeIcon;
+		link: 'Facebook' | 'Instagram' | 'YouTube';
 	};
 
 	const links: LinkProps[] = [
@@ -22,25 +27,21 @@
 			link: 'Instagram',
 		},
 		{
-			href: 'https://www.x.com/teknik-expressen/',
-			icon: XIcon,
-			link: 'X',
+			href: 'https://www.youtube.com/teknik-expressen/',
+			icon: YouTubeIcon,
+			link: 'YouTube',
 		},
 	];
 </script>
 
-<section class="sm:mx-[20%] md:mx-[30%] lg:mx-0">
-	<h3
-		class="mb-4 text-lg font-semibold sm:whitespace-nowrap lg:whitespace-normal"
-	>
-		Följ oss
-	</h3>
+<section class="flex flex-col items-center sm:mx-[10%] md:mx-[15%] lg:mx-0">
+	<FooterHeadingList>Follow us</FooterHeadingList>
 	<div class="flex gap-4">
 		{#each links as { href, link, icon: Icon }}
 			<Link
-				class={cn(buttonVariants({ variant: 'ghost', size: 'icon' }))}
+				class={cn(buttonVariants({ variant: 'outline', size: 'icon' }))}
 				target="_blank"
-				aria-label={`Gå till Teknik Expressens ${link} sida, öppnas i en ny flik`}
+				aria-label={`Go to TechExpress's ${link} page, opens in a new tab`}
 				{href}
 			>
 				<Icon
