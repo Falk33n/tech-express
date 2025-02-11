@@ -1,6 +1,6 @@
 import { NODE_ENV, SECRET_JWT_STRING } from '$env/static/private';
-import { db } from '$src/lib/server/db';
-import { type Handle, type HandleServerError } from '@sveltejs/kit';
+import { db } from '$lib/server/db';
+import { redirect, type Handle, type HandleServerError } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 
 type JwtPayload = {
@@ -13,6 +13,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (sessionCookie) {
 		const decoded = jwt.verify(sessionCookie, SECRET_JWT_STRING) as JwtPayload;
 		event.locals.userId = decoded.userId;
+
+		if (
+			event.url.pathname.startsWith('/signup') ||
+			event.url.pathname.startsWith('/login')
+		) {
+			throw redirect(302, '/account');
+		}
+	} else {
+		if (event.url.pathname.startsWith('/account')) {
+			throw redirect(302, '/login');
+		}
 	}
 
 	return await resolve(event);
