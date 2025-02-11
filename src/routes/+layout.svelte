@@ -49,12 +49,12 @@
 <Toaster richColors />
 
 <SkipToMain />
-<Navbar {data} />
+<Navbar products={data.products} />
 <main
 	id="main-content"
 	class="scroll-mt-20"
 >
 	{@render children()}
 </main>
-<Newsletter />
+<Newsletter form={data.newsletterForm} />
 <Footer />
