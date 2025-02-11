@@ -34,7 +34,7 @@
 	];
 </script>
 
-<section class="flex flex-col items-center sm:mx-[10%] md:mx-[15%] lg:mx-0">
+<section class="flex flex-col sm:mx-[10%] sm:items-center md:mx-[15%] lg:mx-0">
 	<FooterHeadingList>Follow us</FooterHeadingList>
 	<div class="flex gap-4">
 		{#each links as { href, link, icon: Icon }}
