@@ -1,6 +1,9 @@
 import { NODE_ENV } from '$env/static/private';
+import { emailSchema } from '$lib/schemas';
 import { db } from '$lib/server/db';
 import type { Product } from '$lib/types';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import type { LayoutServerLoad } from './$types';
 
 async function getSortedProducts(request: Request, url: URL) {
@@ -37,5 +40,6 @@ async function getSortedProducts(request: Request, url: URL) {
 export const load: LayoutServerLoad = async ({ request, url }) => {
 	return {
 		products: await getSortedProducts(request, url),
+		newsletterForm: await superValidate(zod(emailSchema)),
 	};
 };
