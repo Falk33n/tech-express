@@ -1,40 +1,16 @@
 import { SECRET_JWT_STRING } from '$env/static/private';
+import { loginSchema } from '$lib/schemas';
 import { db } from '$lib/server/db';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
-import { compare } from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { z } from 'zod';
-
-const authSchema = z.object({
-	email: z
-		.string({
-			required_error: 'Email is required.',
-			invalid_type_error: 'Email must be a string.',
-		})
-		.nonempty('Email cannot be empty.')
-		.email('Email is invalid.'),
-	password: z
-		.string({
-			required_error: 'Password is required.',
-			invalid_type_error: 'Password must be a string.',
-		})
-		.min(8, 'Password must be at least 8 characters long.')
-		.regex(
-			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-			'Password must contain at least one lowercase letter, one uppercase letter, and one digit.',
-		),
-	rememberMe: z
-		.boolean({ invalid_type_error: 'Remember Me must be a boolean.' })
-		.default(false)
-		.optional(),
-});
 
 const AUTHENTICATION_COOKIE_NAME = 'au_c';
 const THIRTY_DAYS = 30 * 24 * 60 * 60;
 const TWO_HOURS = 2 * 60 * 60;
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-	const parsedRequest = authSchema.safeParse({
+	const parsedRequest = loginSchema.safeParse({
 		...(await request.json()),
 	});
 
@@ -50,7 +26,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
 	if (
 		!user ||
-		!(await compare(parsedRequest.data.password, user.hashedPassword))
+		!(await bcryptjs.compare(parsedRequest.data.password, user.hashedPassword))
 	) {
 		error(401, 'Invalid email or password');
 	}
@@ -66,4 +42,10 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	});
 
 	return json({ message: 'User authenticated successfully' }, { status: 200 });
+};
+
+export const DELETE: RequestHandler = async ({ cookies }) => {
+	cookies.delete(AUTHENTICATION_COOKIE_NAME, { path: '/' });
+
+	return json({ message: 'User logged out successfully' }, { status: 200 });
 };
