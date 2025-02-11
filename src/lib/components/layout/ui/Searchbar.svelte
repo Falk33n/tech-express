@@ -18,16 +18,16 @@
 	type Props = {
 		rootRef?: HTMLDivElement | null;
 		inputRef?: HTMLInputElement | null;
-		data: { products: Product[] };
+		products: Product[];
 	};
 
 	let {
 		rootRef = $bindable(null),
 		inputRef = $bindable(null),
-		data,
+		products,
 	}: Props = $props();
 
-	const productsToShow = data.products.filter((product) =>
+	const productsToShow = products.filter((product) =>
 		product.name.toLowerCase().includes(inputValue.toLowerCase()),
 	);
 
@@ -68,17 +68,24 @@
 	class="focus-within:border-primary max-w-[450px] rounded-lg border"
 	onmouseleave={(event) => handleCommandBlur(event)}
 >
+	<label
+		for="searchbar"
+		class="sr-only"
+	>
+		Searchbar
+	</label>
 	<CommandInput
 		bind:ref={inputRef}
 		bind:value={inputValue}
+		id="searchbar"
 		placeholder="Search..."
 		class="h-9 text-sm"
 		onfocus={() => (hasFocus = true)}
 	/>
 	{#if !!inputValue && hasFocus}
-		<div class="fixed top-0 z-[100] -ml-8 px-8 pt-16 pb-8">
+		<div class="fixed top-0 z-[100] -ml-8 px-8 pt-[17.5rem] pb-8 lg:pt-16">
 			<CommandList
-				class="bg-popover rounded-b-lg border"
+				class="bg-popover rounded-b-lg border max-lg:max-h-[550px]"
 				style={`width: ${listWidth}px;`}
 			>
 				<CommandEmpty>No results found.</CommandEmpty>

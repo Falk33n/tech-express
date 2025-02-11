@@ -38,7 +38,7 @@
 		<div class="flex flex-1 flex-col gap-2">
 			<div class="flex items-center justify-between gap-2">
 				<h3 class="truncate font-semibold">{name}</h3>
-				<span>${totalInCart && price * totalInCart}</span>
+				<span class="font-medium">${totalInCart && price * totalInCart}</span>
 			</div>
 			<span class="flex items-center justify-end gap-2">
 				{quantity} in stock

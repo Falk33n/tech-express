@@ -36,6 +36,16 @@
 <Button
 	size="icon"
 	variant="outline"
+	class="hover:bg-primary size-6"
+	aria-label="Decrease quantity by one"
+	onclick={() => removeFromCart(id)}
+>
+	-
+</Button>
+<span>{totalInCart}</span>
+<Button
+	size="icon"
+	variant="outline"
 	aria-label="Increase quantity by one"
 	class="hover:bg-primary size-6"
 	disabled={totalInCart && totalInCart >= quantity ? true : false}
@@ -43,14 +53,4 @@
 	onclick={() => tryAddToCart()}
 >
 	+
-</Button>
-<span>{totalInCart}</span>
-<Button
-	size="icon"
-	variant="outline"
-	class="hover:bg-primary size-6"
-	aria-label="Decrease quantity by one"
-	onclick={() => removeFromCart(id)}
->
-	-
 </Button>

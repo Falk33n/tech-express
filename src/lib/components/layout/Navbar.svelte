@@ -14,9 +14,9 @@
 
 	let isMobile = $state(false);
 
-	type Props = { data: { products: Product[] } };
+	type Props = { products: Product[] };
 
-	let { data }: Props = $props();
+	let { products }: Props = $props();
 
 	const links = [
 		{ text: 'Account', href: '/account' },
@@ -68,7 +68,7 @@
 			{#if !isMobile}
 				<div class="flex w-full max-w-sm items-center gap-4">
 					<ModeToggle />
-					<Searchbar {data} />
+					<Searchbar {products} />
 					<ShoppingCartDropdownMenu />
 				</div>
 			{/if}
@@ -87,7 +87,7 @@
 						{/snippet}
 					</SheetTrigger>
 					<SheetContent>
-						<div class="flex flex-col gap-4 py-4">
+						<div class="flex flex-col gap-6 py-6">
 							{#each links as link}
 								<Link
 									href={link.href}
@@ -96,6 +96,13 @@
 									{link.text}
 								</Link>
 							{/each}
+						</div>
+						<div class="flex w-full flex-col items-center gap-6 pb-6">
+							<div class="flex items-center gap-6">
+								<ModeToggle />
+								<ShoppingCartDropdownMenu />
+							</div>
+							<Searchbar {products} />
 						</div>
 					</SheetContent>
 				</Sheet>

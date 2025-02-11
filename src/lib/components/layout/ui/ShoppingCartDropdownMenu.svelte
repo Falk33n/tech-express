@@ -74,7 +74,11 @@
 				<DropdownMenuItem
 					class="flex cursor-pointer items-center justify-between gap-2"
 				>
-					<p>Total amount is ${totalPriceInShoppingCart}.</p>
+					<p>
+						Total amount is <span class="font-semibold"
+							>${totalPriceInShoppingCart}</span
+						>.
+					</p>
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					onclick={(event) => event.preventDefault()}
