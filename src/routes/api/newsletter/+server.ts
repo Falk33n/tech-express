@@ -2,21 +2,9 @@ import {
 	SECRET_NEWSLETTER_EMAIL,
 	SECRET_NEWSLETTER_EMAIL_PASSWORD,
 } from '$env/static/private';
+import { emailSchema, type Email } from '$lib/schemas';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 import nodemailer from 'nodemailer';
-import { z } from 'zod';
-
-const emailSchema = z.object({
-	email: z
-		.string({
-			required_error: 'Email is required.',
-			invalid_type_error: 'Email must be a string.',
-		})
-		.nonempty('Email cannot be empty.')
-		.email('Email must be of a valid email format.'),
-});
-
-type Email = Zod.infer<typeof emailSchema>;
 
 const transporter = nodemailer.createTransport({
 	service: 'Gmail',

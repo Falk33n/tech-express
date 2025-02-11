@@ -1,32 +1,51 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
+	import {
+		FormButton,
+		FormControl,
+		FormField,
+		FormFieldErrors,
+		FormLabel,
+	} from '$lib/components/ui/form';
 	import { LoaderIcon } from '$lib/components/ui/icons';
 	import { Input } from '$lib/components/ui/input';
 	import { SectionHeading } from '$lib/components/ui/typography';
+	import { emailSchema, type Email } from '$lib/schemas';
 	import { toast } from 'svelte-sonner';
+	import {
+		superForm,
+		type Infer,
+		type SuperValidated,
+	} from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
 
-	let input = $state({ value: '' });
+	let { form: incomingFormData }: { form: SuperValidated<Infer<Email>> } =
+		$props();
+
+	const form = superForm(incomingFormData, {
+		validators: zodClient(emailSchema),
+		clearOnSubmit: 'errors-and-message',
+	});
+
+	const { form: formData, enhance } = form;
+
 	let isFormSubmitting = $state({ value: false });
 
-	const isButtonDisabled = $derived({ value: input.value === '' });
+	const isButtonDisabled = $derived({ value: $formData.email === '' });
 
 	async function handleSubmit() {
-		if (input.value.trim() === '') {
-			input.value = '';
+		if ($formData.email.trim() === '') {
+			$formData.email = '';
 			return;
 		}
 
-		const storedInputValue = input.value;
-
 		isFormSubmitting.value = true;
-		input.value = '';
 
 		const response = await fetch('/api/newsletter', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ email: storedInputValue }),
+			body: JSON.stringify($formData),
 		});
 
 		if (!response.ok) {
@@ -68,26 +87,38 @@
 		</p>
 		<form
 			class="mx-auto flex max-w-md gap-4"
+			method="POST"
+			action="/?/newsletter"
+			use:enhance
 			onsubmit={async (event) => {
 				event.preventDefault();
 				await handleSubmit();
 			}}
 		>
-			<Input
-				bind:value={input.value}
-				type="email"
+			<FormField
+				{form}
 				name="email"
-				placeholder="Your email address"
-				autocomplete="email"
-				class="border-muted-foreground/25 dark:border-muted-foreground/50 bg-background"
-				onkeydown={async (event) => await handleInputSubmitForm(event)}
-				required
-			/>
-			<Button
+				class="w-full"
+			>
+				<FormControl>
+					{#snippet children({ props })}
+						<FormLabel class="sr-only">Email</FormLabel>
+						<Input
+							{...props}
+							placeholder="Your email address"
+							autocomplete="email"
+							onkeydown={async (event) => await handleInputSubmitForm(event)}
+							class="border-muted-foreground/25 dark:border-muted-foreground/50 bg-background"
+							bind:value={$formData.email}
+						/>
+					{/snippet}
+				</FormControl>
+				<FormFieldErrors class="text-left" />
+			</FormField>
+			<FormButton
 				disabled={isButtonDisabled.value || isFormSubmitting.value}
 				aria-disabled={isButtonDisabled.value || isFormSubmitting.value}
 				aria-busy={isFormSubmitting.value}
-				type="submit"
 			>
 				{#if isFormSubmitting.value}
 					<LoaderIcon
@@ -97,7 +128,7 @@
 				{:else}
 					Subscribe
 				{/if}
-			</Button>
+			</FormButton>
 		</form>
 	</section>
 </div>
