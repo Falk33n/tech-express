@@ -15,7 +15,7 @@
 	variant="destructive"
 	class="mx-auto w-[calc(100%-2rem)] sm:w-[70%] sm:max-w-[40rem]"
 >
-	<AlertTitle class="text-lg font-semibold">Något gick fel!</AlertTitle>
+	<AlertTitle class="text-lg font-semibold">Something went wrong!</AlertTitle>
 	<AlertDescription>
 		{@render children?.()}
 	</AlertDescription>
