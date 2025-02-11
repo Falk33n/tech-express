@@ -68,3 +68,141 @@ export const productSchema = z
 		}),
 	})
 	.extend(uuidSchema.shape);
+
+export const emailSchema = z.object({
+	email: z
+		.string({
+			required_error: 'Email is required.',
+			invalid_type_error: 'Email must be a string.',
+		})
+		.nonempty('Email cannot be empty.')
+		.email('Email must be of a valid email format.'),
+});
+
+export type Email = typeof emailSchema;
+
+export const contactSchema = z.object({
+	email: z
+		.string({
+			required_error: 'Email is required.',
+			invalid_type_error: 'Email must be a string.',
+		})
+		.nonempty('Email cannot be empty.')
+		.email('Email must be of a valid email format.'),
+
+	name: z
+		.string({
+			required_error: 'Name is required.',
+			invalid_type_error: 'Name must be a string.',
+		})
+		.nonempty('Name cannot be empty.')
+		.max(100, 'Name cannot be longer than 100 characters.'),
+
+	subject: z
+		.string({
+			required_error: 'Subject is required.',
+			invalid_type_error: 'Subject must be a string.',
+		})
+		.nonempty('Subject cannot be empty.')
+		.max(200, 'Subject cannot be longer than 200 characters.'),
+
+	message: z
+		.string({
+			required_error: 'Message is required.',
+			invalid_type_error: 'Message must be a string.',
+		})
+		.nonempty('Message cannot be empty.')
+		.max(1000, 'Message cannot be longer than 1000 characters.'),
+});
+
+export type Contact = typeof contactSchema;
+
+export const signupSchema = z
+	.object({
+		email: z
+			.string({
+				required_error: 'Email is required.',
+				invalid_type_error: 'Email must be a string.',
+			})
+			.nonempty('Email cannot be empty.')
+			.email('Email is invalid.'),
+		password: z
+			.string({
+				required_error: 'Password is required.',
+				invalid_type_error: 'Password must be a string.',
+			})
+			.min(8, 'Password must be at least 8 characters long.')
+			.regex(
+				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+				'Password must contain at least one lowercase letter, one uppercase letter, and one digit.',
+			),
+		confirmPassword: z.string({
+			required_error: 'Confirm Password is required.',
+			invalid_type_error: 'Confirm Password must be a string.',
+		}),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: 'Passwords do not match.',
+		path: ['confirmPassword'],
+	});
+
+export type SignUp = typeof signupSchema;
+
+export const loginSchema = z.object({
+	email: z
+		.string({
+			required_error: 'Email is required.',
+			invalid_type_error: 'Email must be a string.',
+		})
+		.nonempty('Email cannot be empty.')
+		.email('Email is invalid.'),
+	password: z
+		.string({
+			required_error: 'Password is required.',
+			invalid_type_error: 'Password must be a string.',
+		})
+		.min(8, 'Password must be at least 8 characters long.')
+		.regex(
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+			'Password must contain at least one lowercase letter, one uppercase letter, and one digit.',
+		),
+	rememberMe: z
+		.boolean({ invalid_type_error: 'Remember Me must be a boolean.' })
+		.default(false)
+		.optional(),
+});
+
+export type Login = typeof loginSchema;
+
+export const updateAccountSchema = z.object({
+	email: z
+		.string({
+			required_error: 'Email is required.',
+			invalid_type_error: 'Email must be a string.',
+		})
+		.nonempty('Email cannot be empty.')
+		.email('Email is invalid.'),
+	password: z
+		.string({
+			required_error: 'Password is required.',
+			invalid_type_error: 'Password must be a string.',
+		})
+		.min(8, 'Password must be at least 8 characters long.')
+		.regex(
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+			'Password must contain at least one lowercase letter, one uppercase letter, and one digit.',
+		),
+	newPassword: z
+		.string({
+			required_error: 'New Password is required.',
+			invalid_type_error: 'New Password must be a string.',
+		})
+		.min(8, 'New Password must be at least 8 characters long.')
+		.regex(
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+			'Password must contain at least one lowercase letter, one uppercase letter, and one digit.',
+		)
+		.optional(),
+});
+
+export type UpdateAccount = typeof updateAccountSchema;
