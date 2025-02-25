@@ -1,35 +1,24 @@
 <script lang="ts">
-	let amount = $state(0);
-	async function onclick() {
-		const mockdata = {
-			name: 'Testing',
-			description: 'Lorem ipsum dolar amet',
-			imageDescription: 'Lorem ipsum dolar amet',
-			imageUrl: 'https://placehold.co/400x400',
-			price: 200,
-			quantity: 200,
-			category: 'monitors',
-		};
+	import { AlsoLookedAtProducts, ProductPage } from '$lib/components/products';
+	import type { PageProps } from './$types';
 
-		amount += 1;
+	let { data }: PageProps = $props();
 
-		try {
-			const response = await fetch('/api/products', {
-				body: JSON.stringify(mockdata),
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-			});
+	const product = data.products.filter(
+		(product) => product.id === data.productId,
+	)[0];
 
-			if (response.ok) {
-				console.log('Added');
-			}
-		} catch (e) {
-			console.error(e);
-		}
-	}
+	const alsoLookedAtProducts = data.products.slice(0, 3);
+
+	const isProductNull = product === undefined;
 </script>
 
-<button
-	onclick={async () => await onclick()}
-	class="cursor-pointer">add</button
->
+<svelte:head>
+	<title>Product - TechExpress</title>
+</svelte:head>
+
+<ProductPage
+	{product}
+	{isProductNull}
+/>
+<AlsoLookedAtProducts {alsoLookedAtProducts} />
