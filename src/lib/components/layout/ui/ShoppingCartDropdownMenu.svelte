@@ -1,7 +1,15 @@
 <script lang="ts">
-	import { ShoppingCartProduct } from '$lib/components/layout/ui';
+	import { CheckoutForm, ShoppingCartProduct } from '$lib/components/layout/ui';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
+	import {
+		Dialog,
+		DialogContent,
+		DialogDescription,
+		DialogHeader,
+		DialogTitle,
+		DialogTrigger,
+	} from '$lib/components/ui/dialog';
 	import {
 		DropdownMenu,
 		DropdownMenuContent,
@@ -11,8 +19,16 @@
 		DropdownMenuSeparator,
 		DropdownMenuTrigger,
 	} from '$lib/components/ui/dropdown-menu';
-	import { ShoppingCartIcon } from '$lib/components/ui/icons';
+	import type { purchaseSchema } from '$lib/schemas';
 	import { productsInShoppingCart } from '$lib/shopping-cart-state.svelte';
+	import { ShoppingCartIcon } from 'lucide-svelte';
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+
+	type Props = {
+		form: SuperValidated<Infer<typeof purchaseSchema>>;
+	};
+
+	let { form }: Props = $props();
 
 	const totalProductsInShoppingCart = $derived.by(() =>
 		productsInShoppingCart.value.reduce(
@@ -22,15 +38,18 @@
 	);
 
 	const totalPriceInShoppingCart = $derived.by(() =>
-		productsInShoppingCart.value.reduce(
-			(sum, product) => sum + (product.totalInCart ?? 0) * (product.price ?? 0),
-			0,
-		),
+		productsInShoppingCart.value
+			.reduce(
+				(sum, product) =>
+					sum + (product.totalInCart ?? 0) * (product.price ?? 0),
+				0,
+			)
+			.toFixed(2),
 	);
 </script>
 
 <DropdownMenu>
-	<DropdownMenuTrigger class="relative cursor-pointer px-2">
+	<DropdownMenuTrigger class="relative px-2 cursor-pointer">
 		{#snippet child({ props })}
 			<Button
 				variant="outline"
@@ -40,7 +59,7 @@
 			>
 				{#if totalProductsInShoppingCart > 0}
 					<Badge
-						class="absolute top-0 right-0 z-[10] flex size-5 scale-75 items-center justify-center rounded-full p-0"
+						class="top-0 right-0 z-[10] absolute flex justify-center items-center p-0 rounded-full size-5 scale-75"
 						aria-hidden
 					>
 						{totalProductsInShoppingCart}
@@ -48,7 +67,7 @@
 				{/if}
 				<ShoppingCartIcon
 					aria-hidden
-					class="absolute bottom-2 left-1.5"
+					class="bottom-2 left-1.5 absolute"
 				/>
 			</Button>
 		{/snippet}
@@ -57,7 +76,7 @@
 		align="center"
 		sideOffset={14}
 	>
-		<DropdownMenuGroup class="w-[250px] max-w-full space-y-2">
+		<DropdownMenuGroup class="space-y-2 w-[280px] max-w-full">
 			<DropdownMenuGroupHeading class="my-0">
 				Shopping Cart
 			</DropdownMenuGroupHeading>
@@ -66,34 +85,52 @@
 				{#each productsInShoppingCart.value as product}
 					<DropdownMenuItem
 						onclick={(event) => event.preventDefault()}
-						class="flex cursor-pointer items-center justify-between gap-2"
+						class="flex justify-between items-center gap-2 cursor-pointer"
 					>
 						<ShoppingCartProduct {...product} />
 					</DropdownMenuItem>
 				{/each}
 				<DropdownMenuItem
-					class="flex cursor-pointer items-center justify-between gap-2"
+					class="flex justify-between items-center gap-2 cursor-pointer"
 				>
 					<p>
-						Total amount is <span class="font-semibold"
-							>${totalPriceInShoppingCart}</span
-						>.
+						Total amount is
+						<span class="font-semibold">
+							${totalPriceInShoppingCart}
+						</span>
 					</p>
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					onclick={(event) => event.preventDefault()}
-					class="flex cursor-pointer items-center justify-between gap-2"
+					class="flex justify-between items-center gap-2 cursor-pointer"
 				>
-					<Button
-						size="sm"
-						class="w-full"
-					>
-						Proceed to checkout
-					</Button>
+					<Dialog>
+						<DialogTrigger>
+							{#snippet child({ props })}
+								<Button
+									size="sm"
+									class="w-full"
+									{...props}
+								>
+									Proceed to checkout
+								</Button>
+							{/snippet}
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle class="text-2xl">Checkout</DialogTitle>
+								<DialogDescription>
+									Here you can checkout your shopping cart by entering your card
+									details.
+								</DialogDescription>
+							</DialogHeader>
+							<CheckoutForm {form} />
+						</DialogContent>
+					</Dialog>
 				</DropdownMenuItem>
 			{:else}
 				<DropdownMenuItem
-					class="flex cursor-pointer items-center justify-between gap-2"
+					class="flex justify-between items-center gap-2 cursor-pointer"
 				>
 					<p>Shopping cart is empty.</p>
 				</DropdownMenuItem>
