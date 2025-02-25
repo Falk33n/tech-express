@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { CheckIcon, MinusIcon } from '$lib/components/ui/icons';
 	import { cn } from '$lib/utils';
 	import {
 		type WithoutChildrenOrChild,
 		DropdownMenu as DropdownMenuPrimitive,
 	} from 'bits-ui';
+	import { CheckIcon, MinusIcon } from 'lucide-svelte';
 	import type { Snippet } from 'svelte';
 
 	type Props =

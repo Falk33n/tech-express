@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { CircleIcon } from '$lib/components/ui/icons';
 	import { cn } from '$lib/utils';
 	import {
 		DropdownMenu as DropdownMenuPrimitive,
 		type WithoutChild,
 	} from 'bits-ui';
+	import { CircleIcon } from 'lucide-svelte';
 
 	type Props = WithoutChild<DropdownMenuPrimitive.RadioItemProps>;
 
