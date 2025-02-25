@@ -32,7 +32,7 @@ This project demonstrates my skills in full-stack web development, focusing on c
 - **Fullstack**: [SvelteKit](https://svelte.dev/docs/kit/introduction) with [Tailwind CSS](https://tailwindcss.com/) and [svelte-shadcn/ui](https://next.shadcn-svelte.com/) for responsive and accessible design.
 - **Database**: [Prisma](https://www.prisma.io/) ORM with [MySQL](https://www.mysql.com/) for secure and efficient data handling.
 - **Authentication**: Custom implementation using [JWT](https://jwt.io/) (JSON Web Tokens) for user authentication.
-- **Deployment**: Hosted through [Vercel](https://vercel.com/) on a secure infrastructure. The live URL for TechExpress is accessible at [timswebb.com](https://timswebb.com).
+- **Deployment**: Hosted through [Vercel](https://vercel.com/) on a secure infrastructure. The live URL for TechExpress is accessible at [https://tech-express.vercel.app/](https://tech-express.vercel.app/).
 
 ## Installation
 
