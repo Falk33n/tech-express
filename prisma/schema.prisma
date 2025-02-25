@@ -28,8 +28,8 @@ enum CategoryName {
 model Product {
   id               String       @id @default(uuid())
   name             String   
-  description      String 
-  imageDescription String 
+  description      String       @db.Text
+  imageDescription String       @db.Text
   imageUrl         String
   price            Float    
   quantity         Int      
