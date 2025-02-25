@@ -64,23 +64,23 @@
 	/>
 	<meta
 		name="twitter:image"
-		content="https://www.yourstore.com/images/hero.webp"
+		content="https://tech-express.vercel.app/images/hero.webp"
 	/>
 	<meta
 		name="twitter:url"
-		content="https://www.yourstore.com/"
+		content="https://tech-express.vercel.app/"
 	/>
 	<meta
 		property="og:image"
-		content="https://www.yourstore.com/images/hero.webp"
+		content="https://tech-express.vercel.app/images/hero.webp"
 	/>
 	<meta
 		property="og:url"
-		content="https://www.yourstore.com/"
+		content="https://tech-express.vercel.app/"
 	/>
 	<link
 		rel="canonical"
-		href="https://www.yourstore.com/"
+		href="https://tech-express.vercel.app/"
 	/>
 	<link
 		rel="icon"
