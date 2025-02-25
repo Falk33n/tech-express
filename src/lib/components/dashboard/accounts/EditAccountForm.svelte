@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import {
 		FormButton,
 		FormControl,
@@ -7,24 +8,34 @@
 		FormLabel,
 	} from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
-	import { updateAccountSchema, type SignUp } from '$lib/schemas';
-	import { LoaderIcon } from 'lucide-svelte';
-	import { toast } from 'svelte-sonner';
 	import {
-		superForm,
-		type Infer,
-		type SuperValidated,
-	} from 'sveltekit-superforms';
+		Select,
+		SelectContent,
+		SelectItem,
+		SelectTrigger,
+	} from '$lib/components/ui/select';
+	import { updateAccountAsAdminSchema } from '$lib/schemas';
+	import { LoaderIcon } from 'lucide-svelte';
+	import { onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
+	type Props = {
+		account: Zod.infer<typeof updateAccountAsAdminSchema>;
+		form: SuperValidated<Infer<typeof updateAccountAsAdminSchema>>;
+		open: boolean;
+	};
+
 	let {
+		account,
+		open = $bindable(false),
 		form: incomingFormData,
-	}: {
-		form: SuperValidated<Infer<SignUp>>;
-	} = $props();
+	}: Props = $props();
 
 	const form = superForm(incomingFormData, {
-		validators: zodClient(updateAccountSchema),
+		validators: zodClient(updateAccountAsAdminSchema),
 	});
 
 	const { form: formData, enhance } = form;
@@ -32,21 +43,17 @@
 	let isSubmitting = $state(false);
 
 	const isDisabled = $derived(
-		$formData.email === '' ||
-			$formData.password === '' ||
-			$formData.confirmPassword === '',
+		$formData.email === '' || $formData.role === undefined,
 	);
 
 	const handleSubmit = async (e: SubmitEvent) => {
-		if (isDisabled) {
-			form.reset();
-			return;
-		}
+		e.preventDefault();
 
+		open = false;
 		isSubmitting = true;
 
 		const response = await fetch('/api/account', {
-			method: 'DELETE',
+			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -54,7 +61,7 @@
 		});
 
 		if (!response.ok) {
-			toast.error('Could not delete!', {
+			toast.error('Could not update account!', {
 				description: 'Please try again later.',
 			});
 
@@ -62,18 +69,23 @@
 			return;
 		}
 
-		toast.info('Deleted!', {
-			description: 'Your profile was deleted.',
+		toast.success('Updated!', {
+			description: 'The account was edited successfuly.',
 		});
 
 		isSubmitting = false;
+		invalidateAll();
 	};
+
+	onMount(() => {
+		$formData = account;
+	});
 </script>
 
 <form
 	method="POST"
 	use:enhance
-	action="/account?/deleteAccount"
+	action="/dashboard/edit/accounts?/editAccount"
 	onsubmit={async (e) => await handleSubmit(e)}
 	class="flex flex-col gap-4"
 >
@@ -87,10 +99,10 @@
 				<FormLabel class="text-base">Email</FormLabel>
 				<Input
 					{...props}
-					placeholder="Your email"
+					placeholder="Email"
 					type="email"
 					class="mt-1"
-					autocomplete="email"
+					autocomplete="off"
 					bind:value={$formData.email}
 				/>
 			{/snippet}
@@ -99,40 +111,34 @@
 	</FormField>
 	<FormField
 		{form}
-		name="password"
+		name="role"
 		class="w-full"
 	>
 		<FormControl>
 			{#snippet children({ props })}
-				<FormLabel class="text-base">Password</FormLabel>
-				<Input
-					{...props}
-					placeholder="••••••••"
-					type="password"
-					class="mt-1"
-					autocomplete="new-password"
-					bind:value={$formData.password}
-				/>
-			{/snippet}
-		</FormControl>
-		<FormFieldErrors class="text-left" />
-	</FormField>
-	<FormField
-		{form}
-		name="confirmPassword"
-		class="w-full"
-	>
-		<FormControl>
-			{#snippet children({ props })}
-				<FormLabel class="text-base">Confirm Password</FormLabel>
-				<Input
-					{...props}
-					placeholder="••••••••"
-					type="password"
-					class="mt-1"
-					autocomplete="off"
-					bind:value={$formData.confirmPassword}
-				/>
+				<FormLabel class="text-base">Role</FormLabel>
+				<Select
+					type="single"
+					bind:value={$formData.role}
+					name={props.name}
+				>
+					<SelectTrigger
+						class="mt-1 capitalize"
+						{...props}
+					>
+						{$formData.role ? $formData.role : 'Select a role'}
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem
+							value="user"
+							label="User"
+						/>
+						<SelectItem
+							value="admin"
+							label="Admin"
+						/>
+					</SelectContent>
+				</Select>
 			{/snippet}
 		</FormControl>
 		<FormFieldErrors class="text-left" />
@@ -141,8 +147,6 @@
 		disabled={isDisabled || isSubmitting}
 		aria-disabled={isDisabled || isSubmitting}
 		aria-busy={isSubmitting}
-		variant="destructive"
-		class="mb-10"
 	>
 		{#if isSubmitting}
 			<LoaderIcon
@@ -150,7 +154,7 @@
 				class="animate-spin"
 			/>
 		{:else}
-			Delete Account
+			Submit
 		{/if}
 	</FormButton>
 </form>

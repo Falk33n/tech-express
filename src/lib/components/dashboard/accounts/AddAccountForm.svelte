@@ -7,24 +7,27 @@
 		FormLabel,
 	} from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
-	import { updateAccountSchema, type SignUp } from '$lib/schemas';
+	import {
+		Select,
+		SelectContent,
+		SelectItem,
+		SelectTrigger,
+	} from '$lib/components/ui/select';
+	import { signUpAsAdminSchema } from '$lib/schemas';
 	import { LoaderIcon } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
-	import {
-		superForm,
-		type Infer,
-		type SuperValidated,
-	} from 'sveltekit-superforms';
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
-	let {
-		form: incomingFormData,
-	}: {
-		form: SuperValidated<Infer<SignUp>>;
-	} = $props();
+	type Props = {
+		form: SuperValidated<Infer<typeof signUpAsAdminSchema>>;
+	};
+
+	let { form: incomingFormData }: Props = $props();
 
 	const form = superForm(incomingFormData, {
-		validators: zodClient(updateAccountSchema),
+		validators: zodClient(signUpAsAdminSchema),
 	});
 
 	const { form: formData, enhance } = form;
@@ -38,15 +41,12 @@
 	);
 
 	const handleSubmit = async (e: SubmitEvent) => {
-		if (isDisabled) {
-			form.reset();
-			return;
-		}
+		e.preventDefault();
 
 		isSubmitting = true;
 
 		const response = await fetch('/api/account', {
-			method: 'DELETE',
+			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -54,7 +54,7 @@
 		});
 
 		if (!response.ok) {
-			toast.error('Could not delete!', {
+			toast.error('Could not create account!', {
 				description: 'Please try again later.',
 			});
 
@@ -62,8 +62,8 @@
 			return;
 		}
 
-		toast.info('Deleted!', {
-			description: 'Your profile was deleted.',
+		toast.success('Added!', {
+			description: 'The account was created successfuly.',
 		});
 
 		isSubmitting = false;
@@ -73,9 +73,9 @@
 <form
 	method="POST"
 	use:enhance
-	action="/account?/deleteAccount"
+	action="/dashboard/add/accounts?/addAccount"
 	onsubmit={async (e) => await handleSubmit(e)}
-	class="flex flex-col gap-4"
+	class="mx-auto flex w-full flex-col gap-6 sm:w-md"
 >
 	<FormField
 		{form}
@@ -87,10 +87,10 @@
 				<FormLabel class="text-base">Email</FormLabel>
 				<Input
 					{...props}
-					placeholder="Your email"
+					placeholder="Email"
 					type="email"
 					class="mt-1"
-					autocomplete="email"
+					autocomplete="off"
 					bind:value={$formData.email}
 				/>
 			{/snippet}
@@ -108,9 +108,9 @@
 				<Input
 					{...props}
 					placeholder="••••••••"
-					type="password"
 					class="mt-1"
-					autocomplete="new-password"
+					type="password"
+					autocomplete="off"
 					bind:value={$formData.password}
 				/>
 			{/snippet}
@@ -128,11 +128,45 @@
 				<Input
 					{...props}
 					placeholder="••••••••"
-					type="password"
 					class="mt-1"
+					type="password"
 					autocomplete="off"
 					bind:value={$formData.confirmPassword}
 				/>
+			{/snippet}
+		</FormControl>
+		<FormFieldErrors class="text-left" />
+	</FormField>
+	<FormField
+		{form}
+		name="role"
+		class="w-full"
+	>
+		<FormControl>
+			{#snippet children({ props })}
+				<FormLabel class="text-base">Role</FormLabel>
+				<Select
+					type="single"
+					bind:value={$formData.role}
+					name={props.name}
+				>
+					<SelectTrigger
+						class="mt-1 capitalize"
+						{...props}
+					>
+						{$formData.role ? $formData.role : 'Select a role'}
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem
+							value="user"
+							label="User"
+						/>
+						<SelectItem
+							value="admin"
+							label="Admin"
+						/>
+					</SelectContent>
+				</Select>
 			{/snippet}
 		</FormControl>
 		<FormFieldErrors class="text-left" />
@@ -141,8 +175,6 @@
 		disabled={isDisabled || isSubmitting}
 		aria-disabled={isDisabled || isSubmitting}
 		aria-busy={isSubmitting}
-		variant="destructive"
-		class="mb-10"
 	>
 		{#if isSubmitting}
 			<LoaderIcon
@@ -150,7 +182,7 @@
 				class="animate-spin"
 			/>
 		{:else}
-			Delete Account
+			Create Account
 		{/if}
 	</FormButton>
 </form>
