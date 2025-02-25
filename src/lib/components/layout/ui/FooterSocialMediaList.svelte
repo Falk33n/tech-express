@@ -1,17 +1,13 @@
 <script lang="ts">
 	import { FooterHeadingList } from '$lib/components/layout/ui';
 	import { buttonVariants } from '$lib/components/ui/button';
-	import {
-		FacebookIcon,
-		InstagramIcon,
-		YouTubeIcon,
-	} from '$lib/components/ui/icons';
 	import { Link } from '$lib/components/ui/link';
 	import { cn } from '$lib/utils';
+	import { FacebookIcon, InstagramIcon, YoutubeIcon } from 'lucide-svelte';
 
 	type LinkProps = {
 		href: string;
-		icon: typeof FacebookIcon | typeof InstagramIcon | typeof YouTubeIcon;
+		icon: typeof FacebookIcon | typeof InstagramIcon | typeof YoutubeIcon;
 		link: 'Facebook' | 'Instagram' | 'YouTube';
 	};
 
@@ -28,7 +24,7 @@
 		},
 		{
 			href: 'https://www.youtube.com/teknik-expressen/',
-			icon: YouTubeIcon,
+			icon: YoutubeIcon,
 			link: 'YouTube',
 		},
 	];
