@@ -10,7 +10,7 @@
 		DropdownMenuSeparator,
 		DropdownMenuTrigger,
 	} from '$lib/components/ui/dropdown-menu';
-	import { MoonIcon, SunIcon } from '$lib/components/ui/icons';
+	import { MoonIcon, SunIcon } from 'lucide-svelte';
 	import { mode, resetMode, setMode } from 'mode-watcher';
 </script>
 
