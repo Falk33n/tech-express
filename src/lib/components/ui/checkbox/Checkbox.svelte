@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { CheckIcon, MinusIcon } from '$lib/components/ui/icons';
 	import { cn } from '$lib/utils';
 	import {
 		Checkbox as CheckboxPrimitive,
 		type WithoutChildrenOrChild,
 	} from 'bits-ui';
+	import { CheckIcon, MinusIcon } from 'lucide-svelte';
 
 	type Props = WithoutChildrenOrChild<CheckboxPrimitive.RootProps>;
 
