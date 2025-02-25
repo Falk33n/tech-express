@@ -3,7 +3,7 @@ import type { Actions } from '@sveltejs/kit';
 import { fail } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import type { PageServerLoad } from './$types.js';
+import type { PageServerLoad } from './$types';
 
 export const actions: Actions = {
 	signup: async (event) => {
