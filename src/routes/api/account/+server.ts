@@ -45,6 +45,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	} else if (addAccountAsAdminRequest.success) {
 		const { email, password, role } = addAccountAsAdminRequest.data;
 
+		if (!locals.userId) {
+			error(403, 'You do not have the permission to perform this action.');
+		}
+
 		const admin = await db.user.findUnique({
 			where: { id: locals.userId },
 		});
@@ -94,6 +98,10 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 	if (updateAccountAsUserRequest.success) {
 		const { email, password, newPassword } = updateAccountAsUserRequest.data;
 
+		if (!locals.userId) {
+			error(401, 'Invalid email or password');
+		}
+
 		const user = await db.user.findUnique({
 			where: { id: locals.userId },
 		});
@@ -115,6 +123,10 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 		});
 	} else if (updateAccountAsAdminRequest.success) {
 		const { email, role } = updateAccountAsAdminRequest.data;
+
+		if (!locals.userId) {
+			error(403, 'You do not have the permission to perform this action.');
+		}
 
 		const admin = await db.user.findUnique({
 			where: { id: locals.userId },
@@ -183,6 +195,10 @@ export const DELETE: RequestHandler = async ({ request, locals }) => {
 		});
 	} else if (deleteAccountAsAdminRequest.success) {
 		const { email } = deleteAccountAsAdminRequest.data;
+
+		if (!locals.userId) {
+			error(403, 'You do not have the permission to perform this action.');
+		}
 
 		const admin = await db.user.findUnique({
 			where: { id: locals.userId },

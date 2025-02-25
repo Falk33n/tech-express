@@ -43,11 +43,14 @@ async function getSortedProducts(request: Request, url: URL) {
 }
 
 export const load: LayoutServerLoad = async ({ request, url, locals }) => {
-	const user = await db.user.findUnique({ where: { id: locals.userId } });
 	let isAdmin = false;
 
-	if (user) {
-		isAdmin = user.role === 'admin';
+	if (locals.userId) {
+		const user = await db.user.findUnique({ where: { id: locals.userId } });
+
+		if (user) {
+			isAdmin = user.role === 'admin';
+		}
 	}
 
 	return {

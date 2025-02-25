@@ -1,11 +1,21 @@
 import { NODE_ENV, SECRET_JWT_STRING } from '$env/static/private';
 import { db } from '$lib/server/db';
+import type { $Enums } from '@prisma/client';
 import { redirect, type Handle, type HandleServerError } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 
 type JwtPayload = {
-	userId: string;
+	userId?: string;
 };
+
+type User = {
+	id: string;
+	createdAt: Date;
+	email: string;
+	hashedPassword: string;
+	role: $Enums.Role;
+	updatedAt: Date;
+} | null;
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const sessionCookie = event.cookies.get('au_c');
@@ -16,8 +26,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 		redirect(302, '/');
 	} else if (sessionCookie) {
 		const decoded = jwt.verify(sessionCookie, SECRET_JWT_STRING) as JwtPayload;
-		const user = await db.user.findUnique({ where: { id: decoded.userId } });
-		event.locals.userId = user ? decoded.userId : undefined;
+		let user: User = null;
+
+		if (decoded.userId) {
+			user = await db.user.findUnique({ where: { id: decoded.userId } });
+			event.locals.userId = user ? decoded.userId : undefined;
+		}
 
 		if (!user && event.url.pathname.startsWith('/account')) {
 			redirect(302, '/login');
