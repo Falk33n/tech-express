@@ -1,5 +1,5 @@
 import { NODE_ENV } from '$env/static/private';
-import { emailSchema } from '$lib/schemas';
+import { emailSchema, purchaseSchema } from '$lib/schemas';
 import { db } from '$lib/server/db';
 import type { Product } from '$lib/types';
 import { superValidate } from 'sveltekit-superforms';
@@ -28,7 +28,12 @@ async function getSortedProducts(request: Request, url: URL) {
 	}
 
 	const products: { data: Product[] } = await response.json();
-	const sortedProducts = products.data.sort((current, next) => {
+
+	const availableProducts = products.data.filter(
+		(product) => product.quantity > 0,
+	);
+
+	const sortedProducts = availableProducts.sort((current, next) => {
 		return (
 			new Date(next.createdAt).getTime() - new Date(current.createdAt).getTime()
 		);
@@ -37,9 +42,18 @@ async function getSortedProducts(request: Request, url: URL) {
 	return sortedProducts;
 }
 
-export const load: LayoutServerLoad = async ({ request, url }) => {
+export const load: LayoutServerLoad = async ({ request, url, locals }) => {
+	const user = await db.user.findUnique({ where: { id: locals.userId } });
+	let isAdmin = false;
+
+	if (user) {
+		isAdmin = user.role === 'admin';
+	}
+
 	return {
+		isAdmin,
 		products: await getSortedProducts(request, url),
 		newsletterForm: await superValidate(zod(emailSchema)),
+		purschaseForm: await superValidate(zod(purchaseSchema)),
 	};
 };
