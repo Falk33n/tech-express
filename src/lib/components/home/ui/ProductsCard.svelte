@@ -6,10 +6,10 @@
 		CardHeader,
 		CardTitle,
 	} from '$lib/components/ui/card';
-	import { PlusIcon, ShoppingCartIcon } from '$lib/components/ui/icons';
 	import { Link } from '$lib/components/ui/link';
 	import { addToCart } from '$lib/shopping-cart-state.svelte';
 	import type { Product } from '$lib/types';
+	import { PlusIcon, ShoppingCartIcon } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 
 	type Props = {
@@ -46,25 +46,26 @@
 	}
 </script>
 
-<div class="relative">
-	<Link
-		{href}
-		class="transition-transform hover:scale-105 focus-visible:scale-105"
-	>
+<div
+	class="focus-within:ring-ring relative rounded-md transition-transform focus-within:scale-105 focus-within:ring-1 hover:scale-105"
+>
+	<Link {href}>
 		<Card>
 			<CardHeader>
 				<figure>
 					<img
 						{src}
 						{alt}
-						class="h-48 w-full rounded-lg object-cover"
+						class="h-48 w-full rounded-lg object-contain"
 						draggable={false}
 						loading="lazy"
 					/>
 				</figure>
 			</CardHeader>
 			<CardContent>
-				<CardTitle class="mb-2 text-base">{name}</CardTitle>
+				<CardTitle class="mb-2 h-max w-[80%] truncate text-base">
+					{name}
+				</CardTitle>
 				<p
 					aria-label={`This product costs $ ${price}`}
 					class="text-primary text-sm font-bold"
