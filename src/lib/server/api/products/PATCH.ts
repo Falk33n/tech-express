@@ -12,7 +12,7 @@ const productUpdateSchema = productSchema
 	.extend(uuidSchema.shape);
 
 export async function productPATCH(request: Request) {
-	const parsedRequest = await productUpdateSchema.safeParseAsync({
+	const parsedRequest = productUpdateSchema.safeParse({
 		...(await request.json()),
 	});
 
@@ -28,8 +28,7 @@ export async function productPATCH(request: Request) {
 		error(404, 'Product not found');
 	}
 
-	/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-	const { id, createdAt: _, updatedAt: __, ...restProduct } = product;
+	const { id, ...restProduct } = parsedRequest.data;
 
 	const updatedProduct = await db.product.update({
 		where: { id },
