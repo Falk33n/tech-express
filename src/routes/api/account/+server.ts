@@ -1,66 +1,145 @@
-import { signupSchema, updateAccountSchema } from '$lib/schemas';
+import {
+	emailSchema,
+	signUpAsAdminSchema,
+	signupSchema,
+	updateAccountAsAdminSchema,
+	updateAccountSchema,
+} from '$lib/schemas';
 import { db } from '$lib/server/db';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 import bcryptjs from 'bcryptjs';
 
-export const POST: RequestHandler = async ({ request }) => {
-	const parsedRequest = signupSchema.safeParse({
-		...(await request.json()),
+export const POST: RequestHandler = async ({ request, locals }) => {
+	const jsonRequest:
+		| Zod.infer<typeof signupSchema>
+		| Zod.infer<typeof signUpAsAdminSchema> = await request.json();
+
+	const addAccountAsUserRequest = signupSchema.safeParse({
+		...jsonRequest,
 	});
 
-	if (!parsedRequest.success) {
+	const addAccountAsAdminRequest = signUpAsAdminSchema.safeParse({
+		...jsonRequest,
+	});
+
+	if (!addAccountAsUserRequest.success && !addAccountAsAdminRequest.success) {
 		error(400, 'Invalid request body');
 	}
 
-	const { email, password } = parsedRequest.data;
+	if (addAccountAsUserRequest.success) {
+		const { email, password } = addAccountAsUserRequest.data;
 
-	const user = await db.user.findUnique({
-		where: { email },
-	});
+		const user = await db.user.findUnique({
+			where: { email },
+		});
 
-	if (user) {
-		error(409, 'Email is already in use.');
+		if (user) {
+			error(409, 'Email is already in use.');
+		}
+
+		const hashedPassword = await bcryptjs.hash(password, 10);
+
+		await db.user.create({
+			data: { email, hashedPassword },
+		});
+	} else if (addAccountAsAdminRequest.success) {
+		const { email, password, role } = addAccountAsAdminRequest.data;
+
+		const admin = await db.user.findUnique({
+			where: { id: locals.userId },
+		});
+
+		if (!admin || admin.role !== 'admin') {
+			error(403, 'You do not have the permission to perform this action.');
+		}
+
+		const user = await db.user.findUnique({
+			where: { email },
+		});
+
+		if (user) {
+			error(409, 'Email is already in use.');
+		}
+
+		const hashedPassword = await bcryptjs.hash(password, 10);
+
+		await db.user.create({
+			data: { email, hashedPassword, role },
+		});
 	}
-
-	const hashedPassword = await bcryptjs.hash(password, 10);
-
-	await db.user.create({
-		data: { email, hashedPassword },
-	});
 
 	return json({ message: 'User registered successfully' }, { status: 200 });
 };
 
 export const PUT: RequestHandler = async ({ request, locals }) => {
-	const parsedRequest = updateAccountSchema.safeParse({
-		...(await request.json()),
+	const jsonRequest:
+		| Zod.infer<typeof updateAccountSchema>
+		| Zod.infer<typeof updateAccountAsAdminSchema> = await request.json();
+
+	const updateAccountAsUserRequest = updateAccountSchema.safeParse({
+		...jsonRequest,
 	});
 
-	if (!parsedRequest.success) {
+	const updateAccountAsAdminRequest = updateAccountAsAdminSchema.safeParse({
+		...jsonRequest,
+	});
+
+	if (
+		!updateAccountAsUserRequest.success &&
+		!updateAccountAsAdminRequest.success
+	) {
 		error(400, 'Invalid request body');
 	}
 
-	const { email, password, newPassword } = parsedRequest.data;
+	if (updateAccountAsUserRequest.success) {
+		const { email, password, newPassword } = updateAccountAsUserRequest.data;
 
-	const user = await db.user.findUnique({
-		where: { id: locals.userId },
-	});
+		const user = await db.user.findUnique({
+			where: { id: locals.userId },
+		});
 
-	if (!user || !(await bcryptjs.compare(password, user.hashedPassword))) {
-		error(401, 'Invalid email or password');
+		if (!user || !(await bcryptjs.compare(password, user.hashedPassword))) {
+			error(401, 'Invalid email or password');
+		}
+
+		const hashedPassword = newPassword
+			? await bcryptjs.hash(newPassword, 10)
+			: undefined;
+
+		await db.user.update({
+			where: { id: user.id },
+			data: {
+				...(email !== undefined ? { email } : {}),
+				...(hashedPassword !== undefined ? { hashedPassword } : {}),
+			},
+		});
+	} else if (updateAccountAsAdminRequest.success) {
+		const { email, role } = updateAccountAsAdminRequest.data;
+
+		const admin = await db.user.findUnique({
+			where: { id: locals.userId },
+		});
+
+		if (!admin || admin.role !== 'admin') {
+			error(403, 'You do not have the permission to perform this action.');
+		}
+
+		const user = await db.user.findUnique({
+			where: { email },
+		});
+
+		if (!user) {
+			error(401, 'Invalid email');
+		}
+
+		await db.user.update({
+			where: { id: user.id },
+			data: {
+				...(email !== undefined ? { email } : {}),
+				...(role !== undefined ? { role } : {}),
+			},
+		});
 	}
-
-	const hashedPassword = newPassword
-		? await bcryptjs.hash(newPassword, 10)
-		: undefined;
-
-	await db.user.update({
-		where: { id: user.id },
-		data: {
-			...(email !== undefined ? { email } : {}),
-			...(hashedPassword !== undefined ? { hashedPassword } : {}),
-		},
-	});
 
 	return json(
 		{ message: 'User details updated successfully' },
@@ -68,28 +147,63 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 	);
 };
 
-export const DELETE: RequestHandler = async ({ request }) => {
-	const parsedRequest = signupSchema.safeParse({
-		...(await request.json()),
+export const DELETE: RequestHandler = async ({ request, locals }) => {
+	const jsonRequest:
+		| Zod.infer<typeof emailSchema>
+		| Zod.infer<typeof signupSchema> = await request.json();
+
+	const deleteAccountAsUserRequest = signupSchema.safeParse({
+		...jsonRequest,
 	});
 
-	if (!parsedRequest.success) {
+	const deleteAccountAsAdminRequest = emailSchema.safeParse({
+		...jsonRequest,
+	});
+
+	if (
+		!deleteAccountAsUserRequest.success &&
+		!deleteAccountAsAdminRequest.success
+	) {
 		error(400, 'Invalid request body');
 	}
 
-	const { email, password } = parsedRequest.data;
+	if (deleteAccountAsUserRequest.success) {
+		const { email, password } = deleteAccountAsUserRequest.data;
 
-	const user = await db.user.findUnique({
-		where: { email },
-	});
+		const user = await db.user.findUnique({
+			where: { email },
+		});
 
-	if (!user || !(await bcryptjs.compare(password, user.hashedPassword))) {
-		error(401, 'Invalid email or password');
+		if (!user || !(await bcryptjs.compare(password, user.hashedPassword))) {
+			error(401, 'Invalid email or password');
+		}
+
+		await db.user.delete({
+			where: { email: user.email },
+		});
+	} else if (deleteAccountAsAdminRequest.success) {
+		const { email } = deleteAccountAsAdminRequest.data;
+
+		const admin = await db.user.findUnique({
+			where: { id: locals.userId },
+		});
+
+		if (!admin || admin.role !== 'admin') {
+			error(403, 'You do not have the permission to perform this action.');
+		}
+
+		const user = await db.user.findUnique({
+			where: { email },
+		});
+
+		if (!user) {
+			error(401, 'Invalid email');
+		}
+
+		await db.user.delete({
+			where: { email: user.email },
+		});
 	}
-
-	await db.user.delete({
-		where: { email },
-	});
 
 	return json({ message: 'User deleted successfully' }, { status: 200 });
 };

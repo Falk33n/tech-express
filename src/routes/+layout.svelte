@@ -10,14 +10,77 @@
 </script>
 
 <svelte:head>
-	<meta charset="utf-8" />
 	<meta
-		name="viewport"
-		content="width=device-width, initial-scale=1"
+		name="robots"
+		content="index, follow"
+	/>
+	<meta
+		name="author"
+		content="TechExpress"
 	/>
 	<meta
 		name="apple-mobile-web-app-title"
 		content="Texpress"
+	/>
+	<meta
+		name="description"
+		content="Shop the latest tech gadgets, devices, and accessories at great prices. Find top brands and cutting-edge technology in one place."
+	/>
+	<meta
+		name="keywords"
+		content="tech, gadgets, electronics, e-commerce, online store, technology products, accessories, smartphones, laptops, gaming equipment"
+	/>
+	<meta
+		property="og:title"
+		content="TechExpress"
+	/>
+	<meta
+		property="og:description"
+		content="Shop the latest tech gadgets, devices, and accessories at great prices. Find top brands and cutting-edge technology in one place."
+	/>
+	<meta
+		property="og:type"
+		content="website"
+	/>
+	<meta
+		property="og:site_name"
+		content="TechExpress"
+	/>
+	<meta
+		name="twitter:card"
+		content="summary_large_image"
+	/>
+	<meta
+		name="twitter:title"
+		content="TechExpress"
+	/>
+	<meta
+		name="twitter:description"
+		content="Shop the latest tech gadgets, devices, and accessories at great prices. Find top brands and cutting-edge technology in one place."
+	/>
+	<meta
+		name="twitter:creator"
+		content="@techexpress"
+	/>
+	<meta
+		name="twitter:image"
+		content="https://www.yourstore.com/images/hero.webp"
+	/>
+	<meta
+		name="twitter:url"
+		content="https://www.yourstore.com/"
+	/>
+	<meta
+		property="og:image"
+		content="https://www.yourstore.com/images/hero.webp"
+	/>
+	<meta
+		property="og:url"
+		content="https://www.yourstore.com/"
+	/>
+	<link
+		rel="canonical"
+		href="https://www.yourstore.com/"
 	/>
 	<link
 		rel="icon"
@@ -43,13 +106,18 @@
 		rel="manifest"
 		href="/favicons/site.webmanifest"
 	/>
+	<title>Fast Shipping Worldwide - TechExpress</title>
 </svelte:head>
 
 <ModeWatcher />
 <Toaster richColors />
 
 <SkipToMain />
-<Navbar products={data.products} />
+<Navbar
+	isAdmin={data.isAdmin}
+	products={data.products}
+	form={data.purschaseForm}
+/>
 <main
 	id="main-content"
 	class="scroll-mt-20"

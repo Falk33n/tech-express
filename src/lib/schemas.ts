@@ -23,8 +23,7 @@ export const productSchema = z
 				required_error: 'Description is required.',
 				invalid_type_error: 'Description must be a string.',
 			})
-			.nonempty('Description cannot be empty.')
-			.max(300, 'Description must be less than 300 characters.'),
+			.nonempty('Description cannot be empty.'),
 		price: z
 			.number({
 				required_error: 'Price is required.',
@@ -49,8 +48,7 @@ export const productSchema = z
 				required_error: 'Image URL is required.',
 				invalid_type_error: 'Image URL must be a string.',
 			})
-			.nonempty('Image URLs cannot be empty.')
-			.url('Image URLs must be a valid URL.'),
+			.nonempty('Image URLs cannot be empty.'),
 		imageDescription: z
 			.string({
 				required_error: 'Image Description is required.',
@@ -68,6 +66,14 @@ export const productSchema = z
 		}),
 	})
 	.extend(uuidSchema.shape);
+
+export const editProductSchema = productSchema.omit({
+	updatedAt: true,
+	id: true,
+	createdAt: true,
+});
+
+export type EditProduct = typeof editProductSchema;
 
 export const emailSchema = z.object({
 	email: z
@@ -117,36 +123,47 @@ export const contactSchema = z.object({
 
 export type Contact = typeof contactSchema;
 
-export const signupSchema = z
-	.object({
-		email: z
-			.string({
-				required_error: 'Email is required.',
-				invalid_type_error: 'Email must be a string.',
-			})
-			.nonempty('Email cannot be empty.')
-			.email('Email is invalid.'),
-		password: z
-			.string({
-				required_error: 'Password is required.',
-				invalid_type_error: 'Password must be a string.',
-			})
-			.min(8, 'Password must be at least 8 characters long.')
-			.regex(
-				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-				'Password must contain at least one lowercase letter, one uppercase letter, and one digit.',
-			),
-		confirmPassword: z.string({
-			required_error: 'Confirm Password is required.',
-			invalid_type_error: 'Confirm Password must be a string.',
-		}),
-	})
-	.refine((data) => data.password === data.confirmPassword, {
+const baseSignupSchema = z.object({
+	email: z
+		.string({
+			required_error: 'Email is required.',
+			invalid_type_error: 'Email must be a string.',
+		})
+		.nonempty('Email cannot be empty.')
+		.email('Email is invalid.'),
+	password: z
+		.string({
+			required_error: 'Password is required.',
+			invalid_type_error: 'Password must be a string.',
+		})
+		.min(8, 'Password must be at least 8 characters long.')
+		.regex(
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+			'Password must contain at least one lowercase letter, one uppercase letter, and one digit.',
+		),
+	confirmPassword: z.string({
+		required_error: 'Confirm Password is required.',
+		invalid_type_error: 'Confirm Password must be a string.',
+	}),
+});
+
+export const signupSchema = baseSignupSchema.refine(
+	(data) => data.password === data.confirmPassword,
+	{
 		message: 'Passwords do not match.',
 		path: ['confirmPassword'],
-	});
+	},
+);
 
 export type SignUp = typeof signupSchema;
+
+export const signUpAsAdminSchema = z
+	.object({
+		role: z.enum(['user', 'admin'], {
+			invalid_type_error: 'Role must be either "user" or "admin".',
+		}),
+	})
+	.extend(baseSignupSchema.shape);
 
 export const loginSchema = z.object({
 	email: z
@@ -206,3 +223,42 @@ export const updateAccountSchema = z.object({
 });
 
 export type UpdateAccount = typeof updateAccountSchema;
+
+export const updateAccountAsAdminSchema = z.object({
+	email: z
+		.string({
+			invalid_type_error: 'Email must be a string.',
+		})
+		.nonempty('Email cannot be empty.')
+		.email('Email is invalid.')
+		.optional(),
+	role: z
+		.enum(['user', 'admin'], {
+			invalid_type_error: 'Role must be either "user" or "admin".',
+		})
+		.optional(),
+});
+
+export type UpdateAccountAsAdmin = typeof updateAccountAsAdminSchema;
+
+export const purchaseSchema = z.object({
+	cardNumber: z
+		.string({ invalid_type_error: 'Card number must be a string' })
+		.min(16, 'Card number must be 16 digits'),
+	cardHolder: z
+		.string()
+		.min(3, 'Card holder name must be at least 3 characters')
+		.max(50, 'Card holder name must contain a maximum of 50 characters'),
+	expiryDate: z
+		.string({ invalid_type_error: 'Expiry date must be a string' })
+		.regex(
+			/^((0[1-9])|(1[0-2]))\/(\d{2})$/,
+			'Expiry date must be in MM/YY format',
+		),
+	cvv: z
+		.string({ invalid_type_error: 'CVV must only contain digits' })
+		.min(3, 'CCV must be at least 3 digits long.')
+		.max(4, 'CCV must be at maximum 4 digits long.'),
+});
+
+export type PurchaseType = typeof purchaseSchema;

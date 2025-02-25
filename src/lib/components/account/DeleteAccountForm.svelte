@@ -6,9 +6,9 @@
 		FormFieldErrors,
 		FormLabel,
 	} from '$lib/components/ui/form';
-	import { LoaderIcon } from '$lib/components/ui/icons';
 	import { Input } from '$lib/components/ui/input';
 	import { updateAccountSchema, type SignUp } from '$lib/schemas';
+	import { LoaderIcon } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import {
 		superForm,

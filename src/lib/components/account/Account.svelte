@@ -12,6 +12,7 @@
 		CardHeader,
 		CardTitle,
 	} from '$lib/components/ui/card';
+	import { SectionHeading } from '$lib/components/ui/typography';
 	import { type SignUp, type UpdateAccount } from '$lib/schemas';
 	import { toast } from 'svelte-sonner';
 	import { type Infer, type SuperValidated } from 'sveltekit-superforms';
@@ -50,36 +51,50 @@
 	}
 </script>
 
-<div class="container grid min-h-[calc(100vh-4rem)] justify-center py-20">
-	<Card class="w-full sm:w-md">
-		<CardHeader class="pt-14">
-			<CardTitle class="text-center text-2xl">Account</CardTitle>
-			<CardDescription class="text-center">
-				Here you can change your account information. Leave the fields you do
-				NOT want to update blank.
-			</CardDescription>
-		</CardHeader>
-		<CardContent class="flex flex-col gap-4">
-			<UpdateAccountForm form={incomingUpdateFormData} />
-			<form
-				method="POST"
-				onsubmit={async (e) => await logout(e)}
-			>
-				<p class="mt-4 mb-2 text-center text-sm font-medium">
-					Do you wish to log out of your account?
-				</p>
-				<Button
-					type="submit"
-					variant="outline"
-					class="w-full"
+<section class="container py-20">
+	<SectionHeading class="md:text-4xl">Account</SectionHeading>
+	<div
+		class="grid w-full justify-items-center gap-12 sm:items-stretch lg:mx-auto lg:w-[1024px] lg:grid-cols-2 lg:gap-2"
+	>
+		<Card class="w-full sm:w-md">
+			<CardHeader class="pt-14">
+				<CardTitle class="text-center text-2xl">Edit Account</CardTitle>
+				<CardDescription class="text-center">
+					Here you can change your account information. Leave the fields you do
+					NOT want to update blank.
+				</CardDescription>
+			</CardHeader>
+			<CardContent class="flex flex-col gap-4">
+				<UpdateAccountForm form={incomingUpdateFormData} />
+				<form
+					method="POST"
+					onsubmit={async (e) => await logout(e)}
 				>
-					Log out
-				</Button>
-			</form>
-			<h4 class="text-destructive mt-3 text-center text-xl font-bold">
-				Danger Zone
-			</h4>
-			<DeleteAccountForm form={incomingDeleteFormData} />
-		</CardContent>
-	</Card>
-</div>
+					<p class="mt-4 mb-2 text-center text-sm font-medium">
+						Do you wish to log out of your account?
+					</p>
+					<Button
+						type="submit"
+						variant="outline"
+						class="w-full"
+					>
+						Log out
+					</Button>
+				</form>
+			</CardContent>
+		</Card>
+		<Card class="w-full sm:w-md">
+			<CardHeader class="pt-14">
+				<CardTitle class="text-destructive text-center text-2xl"
+					>Danger Zone</CardTitle
+				>
+				<CardDescription class="text-center">
+					Here you can delete your account.
+				</CardDescription>
+			</CardHeader>
+			<CardContent class="flex flex-col gap-4">
+				<DeleteAccountForm form={incomingDeleteFormData} />
+			</CardContent>
+		</Card>
+	</div>
+</section>

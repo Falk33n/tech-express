@@ -10,19 +10,32 @@ type JwtPayload = {
 export const handle: Handle = async ({ event, resolve }) => {
 	const sessionCookie = event.cookies.get('au_c');
 
-	if (sessionCookie) {
+	if (!sessionCookie && event.url.pathname.startsWith('/account')) {
+		redirect(302, '/login');
+	} else if (!sessionCookie && event.url.pathname.startsWith('/dashboard')) {
+		redirect(302, '/');
+	} else if (sessionCookie) {
 		const decoded = jwt.verify(sessionCookie, SECRET_JWT_STRING) as JwtPayload;
-		event.locals.userId = decoded.userId;
+		const user = await db.user.findUnique({ where: { id: decoded.userId } });
+		event.locals.userId = user ? decoded.userId : undefined;
 
-		if (
-			event.url.pathname.startsWith('/signup') ||
-			event.url.pathname.startsWith('/login')
-		) {
-			throw redirect(302, '/account');
-		}
-	} else {
-		if (event.url.pathname.startsWith('/account')) {
-			throw redirect(302, '/login');
+		if (!user && event.url.pathname.startsWith('/account')) {
+			redirect(302, '/login');
+		} else if (!user && event.url.pathname.startsWith('/dashboard')) {
+			redirect(302, '/');
+		} else if (user) {
+			if (
+				['/signup', '/login'].some((route) =>
+					event.url.pathname.startsWith(route),
+				)
+			) {
+				redirect(302, '/account');
+			} else if (
+				event.url.pathname.startsWith('/dashboard') &&
+				user.role === 'user'
+			) {
+				redirect(302, '/');
+			}
 		}
 	}
 

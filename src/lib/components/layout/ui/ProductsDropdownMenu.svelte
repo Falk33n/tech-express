@@ -8,13 +8,13 @@
 		DropdownMenuSeparator,
 		DropdownMenuTrigger,
 	} from '$lib/components/ui/dropdown-menu';
+	import { Link } from '$lib/components/ui/link';
 	import {
 		HeadphonesIcon,
 		LaptopIcon,
 		MonitorIcon,
 		SmartphoneIcon,
-	} from '$lib/components/ui/icons';
-	import { Link } from '$lib/components/ui/link';
+	} from 'lucide-svelte';
 
 	const categories = [
 		{ name: 'Phones', icon: SmartphoneIcon },
@@ -26,7 +26,7 @@
 
 <DropdownMenu>
 	<DropdownMenuTrigger
-		class="focus-visible:ring-ring text-foreground/75 dark:text-muted-foreground hover:text-primary cursor-pointer rounded-md text-sm font-medium transition-colors focus-visible:ring-1 focus-visible:outline-hidden [&_svg]:pointer-events-none [&_svg]:size-4"
+		class="focus-visible:ring-ring text-foreground/75 hover:text-primary dark:text-muted-foreground cursor-pointer rounded-md text-sm font-medium transition-colors focus-visible:ring-1 focus-visible:outline-hidden [&_svg]:pointer-events-none [&_svg]:size-4"
 	>
 		Products
 	</DropdownMenuTrigger>

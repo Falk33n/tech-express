@@ -29,16 +29,16 @@
 	>
 		<figure>
 			<img
-				class="h-auto w-12 rounded"
+				class="size-13 rounded"
 				src={imageUrl}
 				alt={imageDescription}
 				loading="lazy"
 			/>
 		</figure>
-		<div class="flex flex-1 flex-col gap-2">
+		<div class="flex flex-1 flex-col gap-2 pl-1">
 			<div class="flex items-center justify-between gap-2">
-				<h3 class="truncate font-semibold">{name}</h3>
-				<span class="font-medium">${totalInCart && price * totalInCart}</span>
+				<h3 class="w-[100px] truncate font-semibold">{name}</h3>
+				<span class="font-medium">${price}</span>
 			</div>
 			<span class="flex items-center justify-end gap-2">
 				{quantity} in stock

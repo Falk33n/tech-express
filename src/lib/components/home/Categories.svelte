@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Card, CardContent } from '$lib/components/ui/card';
+	import { Link } from '$lib/components/ui/link';
+	import { SectionHeading } from '$lib/components/ui/typography';
 	import {
 		HeadphonesIcon,
 		LaptopIcon,
 		MonitorIcon,
 		SmartphoneIcon,
-	} from '$lib/components/ui/icons';
-	import { Link } from '$lib/components/ui/link';
-	import { SectionHeading } from '$lib/components/ui/typography';
+	} from 'lucide-svelte';
 
 	const categories = [
 		{ name: 'Phones', icon: SmartphoneIcon },

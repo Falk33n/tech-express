@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import {
 		FormButton,
@@ -7,10 +8,10 @@
 		FormFieldErrors,
 		FormLabel,
 	} from '$lib/components/ui/form';
-	import { LoaderIcon } from '$lib/components/ui/icons';
 	import { Input } from '$lib/components/ui/input';
 	import { Link } from '$lib/components/ui/link';
 	import { loginSchema, type Login } from '$lib/schemas';
+	import { LoaderIcon } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import {
 		superForm,
@@ -66,6 +67,8 @@
 		});
 
 		isSubmitting = false;
+
+		goto('/');
 	};
 </script>
 

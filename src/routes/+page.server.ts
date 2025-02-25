@@ -1,4 +1,4 @@
-import { emailSchema } from '$lib/schemas';
+import { emailSchema, purchaseSchema } from '$lib/schemas';
 import { fail, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
@@ -15,6 +15,19 @@ export const actions: Actions = {
 
 		return {
 			newsletterForm,
+		};
+	},
+	purchase: async (event) => {
+		const purchaseForm = await superValidate(event, zod(purchaseSchema));
+
+		if (!purchaseForm.valid) {
+			return fail(400, {
+				purchaseForm,
+			});
+		}
+
+		return {
+			purchaseForm,
 		};
 	},
 };

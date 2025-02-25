@@ -5,6 +5,10 @@
 	let { data }: PageProps = $props();
 </script>
 
+<svelte:head>
+	<title>About us - TechExpress</title>
+</svelte:head>
+
 <MarkdownCard
 	data={data.about}
 	title="About TechExpress"

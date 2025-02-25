@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { ChevronRightIcon } from '$lib/components/ui/icons';
 	import { cn } from '$lib/utils';
 	import {
 		DropdownMenu as DropdownMenuPrimitive,
 		type WithoutChild,
 	} from 'bits-ui';
+	import { ChevronRightIcon } from 'lucide-svelte';
 
 	type Props = WithoutChild<DropdownMenuPrimitive.SubTriggerProps> & {
 		inset?: boolean;

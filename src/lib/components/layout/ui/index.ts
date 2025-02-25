@@ -1,3 +1,5 @@
+export { default as AdminDropdownMenu } from './AdminDropdownMenu.svelte';
+export { default as CheckoutForm } from './CheckoutForm.svelte';
 export { default as FooterHeadingList } from './FooterHeadingList.svelte';
 export { default as FooterList } from './FooterList.svelte';
 export { default as FooterSocialMediaList } from './FooterSocialMediaList.svelte';
