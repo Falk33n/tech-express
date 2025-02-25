@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { DialogOverlay, DialogPortal } from '$lib/components/ui/dialog';
-	import { XIcon } from '$lib/components/ui/icons';
 	import { cn } from '$lib/utils';
 	import {
 		Dialog as DialogPrimitive,
 		type WithoutChildrenOrChild,
 	} from 'bits-ui';
+	import { XIcon } from 'lucide-svelte';
 	import type { Snippet } from 'svelte';
 
 	type Props = WithoutChildrenOrChild<DialogPrimitive.ContentProps> & {
@@ -34,7 +34,7 @@
 	>
 		{@render children?.()}
 		<DialogPrimitive.Close
-			class="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none"
+			class="data-[state=open]:bg-accent focus:ring-ring ring-offset-background data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none"
 			aria-label="Close"
 		>
 			<XIcon aria-hidden />
