@@ -1,27 +1,42 @@
 <script lang="ts">
 	import {
+		AdminDropdownMenu,
 		ProductsDropdownMenu,
 		Searchbar,
 		ShoppingCartDropdownMenu,
 	} from '$lib/components/layout/ui';
 	import { Button } from '$lib/components/ui/button';
-	import { MenuIcon } from '$lib/components/ui/icons';
 	import { Link } from '$lib/components/ui/link';
 	import { ModeToggle } from '$lib/components/ui/mode-toggle';
 	import { Sheet, SheetContent, SheetTrigger } from '$lib/components/ui/sheet';
+	import type { purchaseSchema } from '$lib/schemas';
 	import type { Product } from '$lib/types';
+	import { cn } from '$lib/utils';
+	import { MenuIcon } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 
 	let isMobile = $state(false);
 
-	type Props = { products: Product[] };
+	type Props = {
+		products: Product[];
+		isAdmin: boolean;
+		form: SuperValidated<Infer<typeof purchaseSchema>>;
+	};
 
-	let { products }: Props = $props();
+	let { products, isAdmin = false, form }: Props = $props();
 
 	const links = [
 		{ text: 'Account', href: '/account' },
 		{ text: 'About', href: '/about' },
 		{ text: 'Contact', href: '/contact' },
+	];
+
+	const adminLinks = [
+		{ name: 'Edit Products', url: '/dashboard/edit/products' },
+		{ name: 'Add Products', url: '/dashboard/add/products' },
+		{ name: 'Edit Accounts', url: '/dashboard/edit/accounts' },
+		{ name: 'Add Accounts', url: '/dashboard/add/accounts' },
 	];
 
 	function updateMobileMenuState() {
@@ -55,11 +70,14 @@
 					{#each links as { href, text }}
 						<Link
 							{href}
-							class="text-foreground/75 dark:text-muted-foreground hover:text-primary text-sm font-medium"
+							class="text-foreground/75 hover:text-primary dark:text-muted-foreground text-sm font-medium"
 						>
 							{text}
 						</Link>
 					{/each}
+					{#if isAdmin}
+						<AdminDropdownMenu />
+					{/if}
 				</div>
 			{/if}
 		</div>
@@ -69,7 +87,7 @@
 				<div class="flex w-full max-w-sm items-center gap-4">
 					<ModeToggle />
 					<Searchbar {products} />
-					<ShoppingCartDropdownMenu />
+					<ShoppingCartDropdownMenu {form} />
 				</div>
 			{/if}
 
@@ -80,6 +98,7 @@
 							<Button
 								variant="ghost"
 								size="icon"
+								aria-label="Open Menu"
 								{...props}
 							>
 								<MenuIcon aria-hidden />
@@ -87,20 +106,33 @@
 						{/snippet}
 					</SheetTrigger>
 					<SheetContent>
-						<div class="flex flex-col gap-6 py-6">
+						<div class={cn('flex flex-col gap-6', isAdmin ? 'pt-6' : 'py-6')}>
 							{#each links as link}
 								<Link
 									href={link.href}
-									class="text-foreground/75 dark:text-muted-foreground hover:text-primary text-sm font-medium"
+									class="text-foreground/75 hover:text-primary dark:text-muted-foreground text-sm font-medium"
 								>
 									{link.text}
 								</Link>
 							{/each}
 						</div>
+						{#if isAdmin}
+							<div class="flex flex-col gap-6 py-6">
+								<h3 class="font-semibold">Admin</h3>
+								{#each adminLinks as adminLink}
+									<Link
+										href={adminLink.url}
+										class="text-primary text-sm font-medium hover:underline hover:underline-offset-2"
+									>
+										{adminLink.name}
+									</Link>
+								{/each}
+							</div>
+						{/if}
 						<div class="flex w-full flex-col items-center gap-6 pb-6">
 							<div class="flex items-center gap-6">
 								<ModeToggle />
-								<ShoppingCartDropdownMenu />
+								<ShoppingCartDropdownMenu {form} />
 							</div>
 							<Searchbar {products} />
 						</div>
