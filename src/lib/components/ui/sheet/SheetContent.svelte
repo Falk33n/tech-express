@@ -25,13 +25,13 @@
 </script>
 
 <script lang="ts">
-	import { XIcon } from '$lib/components/ui/icons';
 	import { SheetOverlay } from '$lib/components/ui/sheet';
 	import { cn } from '$lib/utils';
 	import {
 		Dialog as SheetPrimitive,
 		type WithoutChildrenOrChild,
 	} from 'bits-ui';
+	import { XIcon } from 'lucide-svelte';
 	import type { Snippet } from 'svelte';
 
 	type Props = WithoutChildrenOrChild<SheetPrimitive.ContentProps> & {
@@ -59,7 +59,7 @@
 	>
 		{@render children?.()}
 		<SheetPrimitive.Close
-			class="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none"
+			class="data-[state=open]:bg-secondary focus:ring-ring ring-offset-background absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none"
 			aria-label="Close"
 		>
 			<XIcon aria-hidden />
