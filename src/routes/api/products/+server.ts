@@ -12,6 +12,10 @@ export const GET: RequestHandler = async ({ params, url }) => {
 };
 
 export const POST: RequestHandler = async ({ request, locals }) => {
+	if (!locals.userId) {
+		error(403, 'You do not have the permission to perform this action.');
+	}
+
 	const admin = await db.user.findUnique({
 		where: { id: locals.userId },
 	});
@@ -24,6 +28,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 };
 
 export const PATCH: RequestHandler = async ({ request, locals }) => {
+	if (!locals.userId) {
+		error(403, 'You do not have the permission to perform this action.');
+	}
+
 	const admin = await db.user.findUnique({
 		where: { id: locals.userId },
 	});
@@ -36,6 +44,10 @@ export const PATCH: RequestHandler = async ({ request, locals }) => {
 };
 
 export const DELETE: RequestHandler = async ({ request, locals }) => {
+	if (!locals.userId) {
+		error(403, 'You do not have the permission to perform this action.');
+	}
+
 	const admin = await db.user.findUnique({
 		where: { id: locals.userId },
 	});
