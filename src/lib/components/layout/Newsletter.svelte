@@ -6,10 +6,10 @@
 		FormFieldErrors,
 		FormLabel,
 	} from '$lib/components/ui/form';
-	import { LoaderIcon } from '$lib/components/ui/icons';
 	import { Input } from '$lib/components/ui/input';
 	import { SectionHeading } from '$lib/components/ui/typography';
 	import { emailSchema, type Email } from '$lib/schemas';
+	import { LoaderIcon } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import {
 		superForm,
@@ -108,7 +108,7 @@
 							placeholder="Your email address"
 							autocomplete="email"
 							onkeydown={async (event) => await handleInputSubmitForm(event)}
-							class="border-muted-foreground/25 dark:border-muted-foreground/50 bg-background"
+							class="bg-background border-muted-foreground/25 dark:border-muted-foreground/50"
 							bind:value={$formData.email}
 						/>
 					{/snippet}
