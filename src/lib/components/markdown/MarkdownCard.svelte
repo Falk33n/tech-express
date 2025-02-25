@@ -6,7 +6,7 @@
 		CardHeader,
 		CardTitle,
 	} from '$lib/components/ui/card';
-	import { CookieIcon, ShieldIcon } from '$lib/components/ui/icons';
+	import { CookieIcon, ShieldIcon } from 'lucide-svelte';
 	import MarkdownIt from 'markdown-it';
 
 	type Props = {
