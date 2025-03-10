@@ -2,20 +2,26 @@
 	import { SectionAlert } from '$lib/components/errors';
 	import { ProductsCard } from '$lib/components/home/ui';
 	import { SectionHeading } from '$lib/components/ui/typography';
-	import type { Product } from '$lib/types';
+	import type {
+		GlobalLayoutProps,
+		ProductsCategoryPageProps,
+	} from '$lib/types';
 	import { cn } from '$lib/utils';
+	import { getContext } from 'svelte';
 
-	type Props = {
-		capitalizedCategory: string | null;
-		productsByCategory: Product[];
-		isProductsEmpty: boolean;
-	};
+	let { products }: GlobalLayoutProps = getContext('global-layout');
+	let category: ProductsCategoryPageProps = getContext(
+		'products-category-page',
+	);
 
-	let { capitalizedCategory, productsByCategory, isProductsEmpty }: Props =
-		$props();
+	const capitalizedCategory = `${category?.charAt(0).toUpperCase()}${category?.slice(1)}`;
+	const productsByCategory = products.filter(
+		(product) => product.category === category,
+	);
+	const isProductsEmpty = productsByCategory.length < 3;
 </script>
 
-<section class="w-full border-y py-20">
+<section class="py-20 border-y w-full">
 	<SectionHeading>{capitalizedCategory}</SectionHeading>
 	<div
 		class={cn(

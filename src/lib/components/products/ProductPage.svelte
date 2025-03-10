@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { SectionAlert } from '$lib/components/errors';
 	import { ProductInformation } from '$lib/components/products';
-	import type { Product } from '$lib/types';
+	import type { GlobalLayoutProps } from '$lib/types';
+	import { getContext } from 'svelte';
 
-	type Props = {
-		product: Product;
-		isProductNull: boolean;
-	};
+	let { products }: GlobalLayoutProps = getContext('global-layout');
+	let productId: string = getContext('products-single-page');
 
-	let { product, isProductNull }: Props = $props();
+	const product = products.filter((product) => product.id === productId)[0];
+	const isProductNull = product === undefined;
 </script>
 
 <section class="w-full border-y py-20">

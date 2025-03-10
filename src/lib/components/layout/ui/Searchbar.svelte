@@ -8,8 +8,8 @@
 		CommandItem,
 		CommandList,
 	} from '$lib/components/ui/command';
-	import type { Product } from '$lib/types';
-	import { onMount } from 'svelte';
+	import type { GlobalLayoutProps } from '$lib/types';
+	import { getContext, onMount } from 'svelte';
 
 	let inputValue = $state('');
 	let listWidth = $state(0);
@@ -18,14 +18,12 @@
 	type Props = {
 		rootRef?: HTMLDivElement | null;
 		inputRef?: HTMLInputElement | null;
-		products: Product[];
 	};
 
-	let {
-		rootRef = $bindable(null),
-		inputRef = $bindable(null),
-		products,
-	}: Props = $props();
+	let { products }: GlobalLayoutProps = getContext('global-layout');
+
+	let { rootRef = $bindable(null), inputRef = $bindable(null) }: Props =
+		$props();
 
 	const productsToShow = products.filter((product) =>
 		product.name.toLowerCase().includes(inputValue.toLowerCase()),
@@ -65,7 +63,7 @@
 
 <Command
 	bind:ref={rootRef}
-	class="focus-within:border-primary max-w-[450px] rounded-lg border"
+	class="border focus-within:border-primary rounded-lg max-w-[450px]"
 	onmouseleave={(event) => handleCommandBlur(event)}
 >
 	<label
@@ -83,9 +81,9 @@
 		onfocus={() => (hasFocus = true)}
 	/>
 	{#if !!inputValue && hasFocus}
-		<div class="fixed top-0 z-[100] -ml-8 px-8 pt-[17.5rem] pb-8 lg:pt-16">
+		<div class="top-0 z-[100] fixed -ml-8 px-8 pt-[17.5rem] lg:pt-16 pb-8">
 			<CommandList
-				class="bg-popover rounded-b-lg border max-lg:max-h-[550px]"
+				class="bg-popover border rounded-b-lg max-lg:max-h-[550px]"
 				style={`width: ${listWidth}px;`}
 			>
 				<CommandEmpty>No results found.</CommandEmpty>

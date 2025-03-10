@@ -2,21 +2,26 @@
 	import { SectionAlert } from '$lib/components/errors';
 	import { ProductsCard } from '$lib/components/home/ui';
 	import { SectionHeading } from '$lib/components/ui/typography';
-	import type { Product } from '$lib/types';
+	import type { GlobalLayoutProps, Product } from '$lib/types';
 	import { cn } from '$lib/utils';
+	import { getContext, onMount } from 'svelte';
 
-	type Props = {
-		randomFourProducts: Product[];
-	};
+	let { products }: GlobalLayoutProps = getContext('global-layout');
 
-	let { randomFourProducts }: Props = $props();
+	let randomFourProducts = $state<Product[]>([]);
 
-	const isProductsEmpty = randomFourProducts.length < 4;
+	onMount(() => {
+		randomFourProducts = products
+			.toSorted(() => 0.5 - Math.random())
+			.slice(0, 4);
+	});
+
+	const isProductsEmpty = $derived(randomFourProducts.length < 4);
 </script>
 
 <section
 	id="popular-products"
-	class="w-full scroll-mt-16 border-y py-20"
+	class="w-full scroll-mt-16 overflow-hidden border-y py-20"
 >
 	<SectionHeading>Popular Products</SectionHeading>
 	<div
@@ -26,7 +31,7 @@
 		)}
 	>
 		{#if !isProductsEmpty}
-			{#each randomFourProducts as { id, imageUrl, quantity, imageDescription, name, price }}
+			{#each randomFourProducts as { id, imageUrl, quantity, imageDescription, name, price } (imageUrl)}
 				<ProductsCard
 					src={imageUrl}
 					alt={imageDescription}

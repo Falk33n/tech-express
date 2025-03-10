@@ -8,18 +8,16 @@
 	} from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import { SectionHeading } from '$lib/components/ui/typography';
-	import { emailSchema, type Email } from '$lib/schemas';
+	import { emailSchema } from '$lib/schemas';
+	import type { GlobalLayoutProps } from '$lib/types';
 	import { LoaderIcon } from 'lucide-svelte';
+	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import {
-		superForm,
-		type Infer,
-		type SuperValidated,
-	} from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
-	let { form: incomingFormData }: { form: SuperValidated<Infer<Email>> } =
-		$props();
+	let { newsletterForm: incomingFormData }: GlobalLayoutProps =
+		getContext('global-layout');
 
 	const form = superForm(incomingFormData, {
 		validators: zodClient(emailSchema),
@@ -77,16 +75,16 @@
 	}
 </script>
 
-<div class="bg-muted muted-background w-full py-20">
-	<section class="container mx-auto max-w-2xl text-center">
-		<SectionHeading class="mb-4 backdrop-blur-xs">
+<div class="bg-muted py-20 w-full muted-background">
+	<section class="mx-auto max-w-2xl text-center container">
+		<SectionHeading class="backdrop-blur-xs mb-4">
 			Subscribe to our newsletter
 		</SectionHeading>
-		<p class="mx-auto mb-8 w-fit backdrop-blur-xs">
+		<p class="backdrop-blur-xs mx-auto mb-8 w-fit">
 			Get the latest news and deals delivered directly to your inbox.
 		</p>
 		<form
-			class="mx-auto flex max-w-md gap-4"
+			class="flex gap-4 mx-auto max-w-md"
 			method="POST"
 			action="/?/newsletter"
 			use:enhance

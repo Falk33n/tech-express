@@ -7,11 +7,6 @@
 		CardHeader,
 		CardTitle,
 	} from '$lib/components/ui/card';
-	import { type Login } from '$lib/schemas';
-	import { type Infer, type SuperValidated } from 'sveltekit-superforms';
-
-	let { form: incomingFormData }: { form: SuperValidated<Infer<Login>> } =
-		$props();
 </script>
 
 <div class="container grid min-h-[calc(100vh-4rem)] justify-center py-40">
@@ -23,7 +18,7 @@
 			</CardDescription>
 		</CardHeader>
 		<CardContent class="flex flex-col gap-4">
-			<LoginForm form={incomingFormData} />
+			<LoginForm />
 		</CardContent>
 	</Card>
 </div>

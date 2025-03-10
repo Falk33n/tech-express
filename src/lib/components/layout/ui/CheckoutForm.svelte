@@ -8,17 +8,15 @@
 	} from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import { purchaseSchema } from '$lib/schemas';
+	import type { GlobalLayoutProps } from '$lib/types';
 	import { LoaderIcon } from 'lucide-svelte';
+	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
-	type Props = {
-		form: SuperValidated<Infer<typeof purchaseSchema>>;
-	};
-
-	let { form: incomingFormData }: Props = $props();
+	let { purschaseForm: incomingFormData }: GlobalLayoutProps =
+		getContext('global-layout');
 
 	const form = superForm(incomingFormData, {
 		validators: zodClient(purchaseSchema),
@@ -66,7 +64,7 @@
 				<Input
 					{...props}
 					placeholder="Card number"
-					class="input mt-1"
+					class="mt-1 input"
 					autocomplete="off"
 					bind:value={$formData.cardNumber}
 				/>

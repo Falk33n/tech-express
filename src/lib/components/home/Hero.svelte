@@ -20,13 +20,13 @@
 				<Button
 					href="#popular-products"
 					size="lg"
-					class="w-[200px]">Shop now</Button
+					class="w-[200px] max-sm:w-full">Shop now</Button
 				>
 				<Button
 					href="#categories"
 					variant="outline"
 					size="lg"
-					class="hover:bg-background/60 w-[200px] backdrop-blur-xs"
+					class="hover:bg-background/60 w-[200px] backdrop-blur-xs max-sm:w-full"
 				>
 					Browse new goods
 				</Button>
