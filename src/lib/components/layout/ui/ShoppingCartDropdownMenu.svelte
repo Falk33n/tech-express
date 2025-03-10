@@ -19,16 +19,8 @@
 		DropdownMenuSeparator,
 		DropdownMenuTrigger,
 	} from '$lib/components/ui/dropdown-menu';
-	import type { purchaseSchema } from '$lib/schemas';
 	import { productsInShoppingCart } from '$lib/shopping-cart-state.svelte';
 	import { ShoppingCartIcon } from 'lucide-svelte';
-	import type { Infer, SuperValidated } from 'sveltekit-superforms';
-
-	type Props = {
-		form: SuperValidated<Infer<typeof purchaseSchema>>;
-	};
-
-	let { form }: Props = $props();
 
 	const totalProductsInShoppingCart = $derived.by(() =>
 		productsInShoppingCart.value.reduce(
@@ -124,7 +116,7 @@
 									details.
 								</DialogDescription>
 							</DialogHeader>
-							<CheckoutForm {form} />
+							<CheckoutForm />
 						</DialogContent>
 					</Dialog>
 				</DropdownMenuItem>

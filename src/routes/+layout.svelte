@@ -4,9 +4,12 @@
 	import { Toaster } from '$lib/components/ui/toaster';
 	import '$src/app.css';
 	import { ModeWatcher } from 'mode-watcher';
+	import { setContext } from 'svelte';
 	import type { LayoutProps } from './$types';
 
 	let { data, children }: LayoutProps = $props();
+
+	setContext('global-layout', data);
 </script>
 
 <svelte:head>
@@ -113,16 +116,12 @@
 <Toaster richColors />
 
 <SkipToMain />
-<Navbar
-	isAdmin={data.isAdmin}
-	products={data.products}
-	form={data.purschaseForm}
-/>
+<Navbar />
 <main
 	id="main-content"
 	class="scroll-mt-20"
 >
 	{@render children()}
 </main>
-<Newsletter form={data.newsletterForm} />
+<Newsletter />
 <Footer />

@@ -9,18 +9,15 @@
 	} from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import { Link } from '$lib/components/ui/link';
-	import { signupSchema, type SignUp } from '$lib/schemas';
+	import { signupSchema } from '$lib/schemas';
+	import type { SignupPageProps } from '$lib/types';
 	import { LoaderIcon } from 'lucide-svelte';
+	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import {
-		superForm,
-		type Infer,
-		type SuperValidated,
-	} from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
-	let { form: incomingFormData }: { form: SuperValidated<Infer<SignUp>> } =
-		$props();
+	let incomingFormData: SignupPageProps = getContext('signup-page');
 
 	const form = superForm(incomingFormData, {
 		validators: zodClient(signupSchema),
@@ -154,7 +151,7 @@
 			Sign Up
 		{/if}
 	</FormButton>
-	<p class="text-center text-sm">
+	<p class="text-sm text-center">
 		Already have an account?
 		<Link
 			href="/login"

@@ -33,8 +33,9 @@
 	--radius-sm: calc(var(--radius-lg) - 4px);
 	--radius-xs: calc(var(--radius-lg) - 6px);
 
-	--font-geist-sans: 'Geist Sans', ui-sans-serif, system-ui, sans-serif,
-		'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+	--font-geist-sans:
+		'Geist Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+		'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
 	@keyframes accordion-down {
 		from {
@@ -115,7 +116,7 @@
 	}
 
 	body {
-		@apply bg-background font-geist-sans text-foreground min-h-screen w-full overflow-x-hidden;
+		@apply bg-background font-geist-sans text-foreground;
 	}
 
 	::-webkit-scrollbar {

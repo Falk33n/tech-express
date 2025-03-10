@@ -2,19 +2,17 @@
 	import { SectionAlert } from '$lib/components/errors';
 	import { ProductsCard } from '$lib/components/home/ui';
 	import { SectionHeading } from '$lib/components/ui/typography';
-	import type { Product } from '$lib/types';
+	import type { GlobalLayoutProps } from '$lib/types';
 	import { cn } from '$lib/utils';
+	import { getContext } from 'svelte';
 
-	type Props = {
-		alsoLookedAtProducts: Product[];
-	};
+	let { products }: GlobalLayoutProps = getContext('global-layout');
 
-	let { alsoLookedAtProducts }: Props = $props();
-
+	const alsoLookedAtProducts = products.slice(0, 3);
 	const isProductsEmpty = alsoLookedAtProducts.length < 3;
 </script>
 
-<section class="w-full border-y py-20">
+<section class="py-20 border-y w-full">
 	<SectionHeading>Others looked at</SectionHeading>
 	<div class={cn('container grid gap-6', !isProductsEmpty && 'md:grid-cols-3')}>
 		{#if !isProductsEmpty}

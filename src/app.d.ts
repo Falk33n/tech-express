@@ -3,10 +3,6 @@ declare global {
 		interface Locals {
 			userId?: string;
 		}
-		// interface Error {}
-		// interface PageData {}
-		// interface PageState {}
-		// interface Platform {}
 	}
 }
 

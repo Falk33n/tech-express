@@ -10,18 +10,15 @@
 	} from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import { Link } from '$lib/components/ui/link';
-	import { loginSchema, type Login } from '$lib/schemas';
+	import { loginSchema } from '$lib/schemas';
+	import type { LoginPageProps } from '$lib/types';
 	import { LoaderIcon } from 'lucide-svelte';
+	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import {
-		superForm,
-		type Infer,
-		type SuperValidated,
-	} from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
-	let { form: incomingFormData }: { form: SuperValidated<Infer<Login>> } =
-		$props();
+	let incomingFormData: LoginPageProps = getContext('login-page');
 
 	const form = superForm(incomingFormData, {
 		validators: zodClient(loginSchema),

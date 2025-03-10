@@ -9,22 +9,14 @@
 	import { Link } from '$lib/components/ui/link';
 	import { ModeToggle } from '$lib/components/ui/mode-toggle';
 	import { Sheet, SheetContent, SheetTrigger } from '$lib/components/ui/sheet';
-	import type { purchaseSchema } from '$lib/schemas';
-	import type { Product } from '$lib/types';
+	import type { GlobalLayoutProps } from '$lib/types';
 	import { cn } from '$lib/utils';
 	import { MenuIcon } from 'lucide-svelte';
-	import { onMount } from 'svelte';
-	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+	import { getContext, onMount } from 'svelte';
 
 	let isMobile = $state(false);
 
-	type Props = {
-		products: Product[];
-		isAdmin: boolean;
-		form: SuperValidated<Infer<typeof purchaseSchema>>;
-	};
-
-	let { products, isAdmin = false, form }: Props = $props();
+	let { isAdmin }: GlobalLayoutProps = getContext('global-layout');
 
 	const links = [
 		{ text: 'Account', href: '/account' },
@@ -54,12 +46,12 @@
 	});
 </script>
 
-<header class="bg-background sticky top-0 z-50 w-full border-b">
-	<nav class="container flex h-16 items-center">
+<header class="top-0 z-50 sticky bg-background border-b w-full">
+	<nav class="flex items-center h-16 container">
 		<div class="flex items-center gap-6">
 			<Link
 				href="/"
-				class="hover:text-primary text-xl font-bold tracking-wide transition-colors"
+				class="font-bold hover:text-primary text-xl tracking-wide transition-colors"
 			>
 				TechExpress
 			</Link>
@@ -70,7 +62,7 @@
 					{#each links as { href, text }}
 						<Link
 							{href}
-							class="text-foreground/75 hover:text-primary dark:text-muted-foreground text-sm font-medium"
+							class="font-medium text-foreground/75 hover:text-primary dark:text-muted-foreground text-sm"
 						>
 							{text}
 						</Link>
@@ -82,12 +74,12 @@
 			{/if}
 		</div>
 
-		<div class="flex flex-1 items-center justify-end gap-4">
+		<div class="flex flex-1 justify-end items-center gap-4">
 			{#if !isMobile}
-				<div class="flex w-full max-w-sm items-center gap-4">
+				<div class="flex items-center gap-4 w-full max-w-sm">
 					<ModeToggle />
-					<Searchbar {products} />
-					<ShoppingCartDropdownMenu {form} />
+					<Searchbar />
+					<ShoppingCartDropdownMenu />
 				</div>
 			{/if}
 
@@ -110,7 +102,7 @@
 							{#each links as link}
 								<Link
 									href={link.href}
-									class="text-foreground/75 hover:text-primary dark:text-muted-foreground text-sm font-medium"
+									class="font-medium text-foreground/75 hover:text-primary dark:text-muted-foreground text-sm"
 								>
 									{link.text}
 								</Link>
@@ -122,19 +114,19 @@
 								{#each adminLinks as adminLink}
 									<Link
 										href={adminLink.url}
-										class="text-primary text-sm font-medium hover:underline hover:underline-offset-2"
+										class="font-medium text-primary text-sm hover:underline hover:underline-offset-2"
 									>
 										{adminLink.name}
 									</Link>
 								{/each}
 							</div>
 						{/if}
-						<div class="flex w-full flex-col items-center gap-6 pb-6">
+						<div class="flex flex-col items-center gap-6 pb-6 w-full">
 							<div class="flex items-center gap-6">
 								<ModeToggle />
-								<ShoppingCartDropdownMenu {form} />
+								<ShoppingCartDropdownMenu />
 							</div>
-							<Searchbar {products} />
+							<Searchbar />
 						</div>
 					</SheetContent>
 				</Sheet>

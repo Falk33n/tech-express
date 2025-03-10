@@ -1,24 +1,14 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { AlsoLookedAtProducts, ProductPage } from '$lib/components/products';
-	import type { PageProps } from './$types';
+	import { setContext } from 'svelte';
 
-	let { data }: PageProps = $props();
-
-	const product = data.products.filter(
-		(product) => product.id === data.productId,
-	)[0];
-
-	const alsoLookedAtProducts = data.products.slice(0, 3);
-
-	const isProductNull = product === undefined;
+	setContext('products-single-page', page.params.id);
 </script>
 
 <svelte:head>
 	<title>Product - TechExpress</title>
 </svelte:head>
 
-<ProductPage
-	{product}
-	{isProductNull}
-/>
-<AlsoLookedAtProducts {alsoLookedAtProducts} />
+<ProductPage />
+<AlsoLookedAtProducts />

@@ -10,7 +10,6 @@
 	import { addToCart } from '$lib/shopping-cart-state.svelte';
 	import type { Product } from '$lib/types';
 	import { PlusIcon, ShoppingCartIcon } from 'lucide-svelte';
-	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
 	type Props = {
@@ -25,26 +24,18 @@
 
 	let { id, quantity, href, src, alt, name, price }: Props = $props();
 
-	let clientSrc = $state({ value: src });
-	let clientHref = $state({ value: href });
-
-	onMount(() => {
-		clientSrc.value = src;
-		clientHref.value = href;
-	});
-
 	type ShoppingCartProductProps = Omit<
 		Product,
 		'description' | 'category' | 'createdAt' | 'updatedAt'
 	>;
 
 	const shoppingCartConfiguredProduct: ShoppingCartProductProps = {
-		id,
-		imageUrl: clientSrc.value,
+		id: id,
+		imageUrl: src,
 		imageDescription: alt,
-		name,
-		price,
-		quantity,
+		name: name,
+		price: price,
+		quantity: quantity,
 	};
 
 	function addProductToCart() {
@@ -56,28 +47,28 @@
 </script>
 
 <div
-	class="relative rounded-md focus-within:ring-ring focus-within:ring-1 hover:scale-105 focus-within:scale-105 transition-transform"
+	class="focus-within:ring-ring relative rounded-md transition-transform focus-within:scale-105 focus-within:ring-1 hover:scale-105 max-sm:w-[calc(100vw-4rem)]"
 >
-	<Link href={clientHref.value}>
+	<Link {href}>
 		<Card>
 			<CardHeader>
 				<figure>
 					<img
-						src={clientSrc.value}
+						{src}
 						{alt}
-						class="rounded-lg w-full h-48 object-contain"
+						class="h-48 w-full rounded-lg object-contain"
 						draggable={false}
 						loading="lazy"
 					/>
 				</figure>
 			</CardHeader>
 			<CardContent>
-				<CardTitle class="mb-2 w-[80%] h-max text-base truncate">
+				<CardTitle class="mb-2 h-max w-[80%] truncate text-base">
 					{name}
 				</CardTitle>
 				<p
 					aria-label={`This product costs $ ${price}`}
-					class="font-bold text-primary text-sm"
+					class="text-primary text-sm font-bold"
 				>
 					${price}
 				</p>
@@ -86,20 +77,20 @@
 	</Link>
 	<Button
 		size="icon"
-		class="right-6 bottom-6 absolute size-8"
+		class="absolute right-6 bottom-6 size-8"
 		aria-label="Add product to cart"
 		onclick={() => addProductToCart()}
 	>
 		<span
 			aria-hidden="true"
-			class="relative flex justify-center items-center size-full"
+			class="relative flex size-full items-center justify-center"
 		>
 			<ShoppingCartIcon
 				class="mt-1 mr-1.5 scale-100"
 				aria-hidden
 			/>
 			<PlusIcon
-				class="top-px right-0.5 absolute scale-75"
+				class="absolute top-px right-0.5 scale-75"
 				aria-hidden
 			/>
 		</span>
