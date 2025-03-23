@@ -262,3 +262,9 @@ export const purchaseSchema = z.object({
 });
 
 export type PurchaseType = typeof purchaseSchema;
+
+export const cookieConsentSchema = z.object({
+	hasAccepted: z.boolean(),
+});
+
+export type CookieConsent = z.infer<typeof cookieConsentSchema>;

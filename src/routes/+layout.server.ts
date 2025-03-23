@@ -42,7 +42,15 @@ async function getSortedProducts(request: Request, url: URL) {
 	return sortedProducts;
 }
 
-export const load: LayoutServerLoad = async ({ request, url, locals }) => {
+export const load: LayoutServerLoad = async ({
+	request,
+	cookies,
+	url,
+	locals,
+}) => {
+	const cookieConsent = cookies.get('cc_c');
+	const hasAcceptedCookieConsent = cookieConsent === 'true';
+
 	let isAdmin = false;
 
 	if (locals.userId) {
@@ -55,6 +63,7 @@ export const load: LayoutServerLoad = async ({ request, url, locals }) => {
 
 	return {
 		isAdmin,
+		hasAcceptedCookieConsent,
 		products: await getSortedProducts(request, url),
 		newsletterForm: await superValidate(zod(emailSchema)),
 		purschaseForm: await superValidate(zod(purchaseSchema)),
