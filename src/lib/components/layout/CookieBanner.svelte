@@ -1,15 +1,47 @@
-<script>
+<script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import {
 		Card,
 		CardContent,
 		CardDescription,
+		CardFooter,
 		CardHeader,
 		CardTitle,
 	} from '$lib/components/ui/card';
+	import { Link } from '$lib/components/ui/link';
+	import type { GlobalLayoutProps } from '$lib/types';
 	import { XIcon } from 'lucide-svelte';
+	import { getContext } from 'svelte';
+	import { toast } from 'svelte-sonner';
 
-	let isClosed = $state(false);
+	let { hasAcceptedCookieConsent }: GlobalLayoutProps =
+		getContext('global-layout');
+
+	let isClosed = $state(hasAcceptedCookieConsent);
+
+	async function handleSubmit() {
+		const response = await fetch('/api/cookies', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ hasAccepted: true }),
+		});
+
+		if (!response.ok) {
+			toast.error('Something went wrong.', {
+				description: 'Please try again later.',
+			});
+
+			return;
+		}
+
+		toast.info('Success.', {
+			description: 'Thankyou for updating your cookie consent!',
+		});
+
+		isClosed = true;
+	}
 </script>
 
 {#if !isClosed}
@@ -41,7 +73,25 @@
 		</CardHeader>
 
 		<CardContent>
-			<Button class="w-full">Accept</Button>
+			<Button
+				class="w-full"
+				type="submit"
+				aria-label="Accept cookie policy"
+				onclick={() => handleSubmit()}
+			>
+				Accept
+			</Button>
 		</CardContent>
+		<CardFooter>
+			<p class="text-xs">
+				Want to learn more about how we use cookies?
+				<Link
+					href="/cookie-policy"
+					class="text-primary"
+				>
+					Go to our cookie policy page
+				</Link>.
+			</p>
+		</CardFooter>
 	</Card>
 {/if}
