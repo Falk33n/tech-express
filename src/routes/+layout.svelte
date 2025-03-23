@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { Footer, Navbar, Newsletter } from '$lib/components/layout';
+	import {
+		CookieBanner,
+		Footer,
+		Navbar,
+		Newsletter,
+	} from '$lib/components/layout';
 	import { SkipToMain } from '$lib/components/layout/ui';
 	import { Toaster } from '$lib/components/ui/toaster';
 	import '$src/app.css';
@@ -113,6 +118,7 @@
 </svelte:head>
 
 <ModeWatcher />
+<CookieBanner />
 <Toaster richColors />
 
 <SkipToMain />
