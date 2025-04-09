@@ -12,15 +12,16 @@
 	const isProductsEmpty = alsoLookedAtProducts.length < 3;
 </script>
 
-<section class="py-20 border-y w-full">
+<section class="w-full border-y py-20">
 	<SectionHeading>Others looked at</SectionHeading>
 	<div class={cn('container grid gap-6', !isProductsEmpty && 'md:grid-cols-3')}>
 		{#if !isProductsEmpty}
-			{#each alsoLookedAtProducts as { id, imageUrl, quantity, imageDescription, name, price }}
+			{#each alsoLookedAtProducts as { id, imageUrl, quantity, category, imageDescription, name, price }}
 				<ProductsCard
 					src={imageUrl}
 					alt={imageDescription}
 					href={`/products/${id}`}
+					{category}
 					{price}
 					{name}
 					{id}

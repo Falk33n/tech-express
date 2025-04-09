@@ -16,7 +16,7 @@ export type ProductCategory =
 
 export type GlobalLayoutProps = {
 	isAdmin: boolean;
-	hasAcceptedCookieConsent: boolean;
+	hasAcceptedCookieConsent: boolean | null;
 	products: Product[];
 	newsletterForm: SuperValidated<Infer<Email>>;
 	purschaseForm: SuperValidated<Infer<PurchaseType>>;

@@ -11,10 +11,13 @@
 	import { Sheet, SheetContent, SheetTrigger } from '$lib/components/ui/sheet';
 	import type { GlobalLayoutProps } from '$lib/types';
 	import { cn } from '$lib/utils';
+	import { Dialog as SheetPrimitive } from 'bits-ui';
 	import { MenuIcon } from 'lucide-svelte';
 	import { getContext, onMount } from 'svelte';
 
 	let isMobile = $state(false);
+
+	let triggerCloseRef = $state<HTMLButtonElement | null>(null);
 
 	let { isAdmin }: GlobalLayoutProps = getContext('global-layout');
 
@@ -36,6 +39,11 @@
 		isMobile = mediaQuery.matches;
 	}
 
+	function closeSheet() {
+		if (!triggerCloseRef) return;
+		triggerCloseRef.click();
+	}
+
 	onMount(() => {
 		updateMobileMenuState();
 		window.addEventListener('resize', updateMobileMenuState);
@@ -46,12 +54,12 @@
 	});
 </script>
 
-<header class="top-0 z-50 sticky bg-background border-b w-full">
-	<nav class="flex items-center h-16 container">
+<header class="bg-background sticky top-0 z-50 w-full border-b">
+	<nav class="container flex h-16 items-center">
 		<div class="flex items-center gap-6">
 			<Link
 				href="/"
-				class="font-bold hover:text-primary text-xl tracking-wide transition-colors"
+				class="hover:text-primary text-xl font-bold tracking-wide transition-colors"
 			>
 				TechExpress
 			</Link>
@@ -62,7 +70,7 @@
 					{#each links as { href, text }}
 						<Link
 							{href}
-							class="font-medium text-foreground/75 hover:text-primary dark:text-muted-foreground text-sm"
+							class="text-foreground/75 hover:text-primary dark:text-muted-foreground text-sm font-medium"
 						>
 							{text}
 						</Link>
@@ -74,9 +82,9 @@
 			{/if}
 		</div>
 
-		<div class="flex flex-1 justify-end items-center gap-4">
+		<div class="flex flex-1 items-center justify-end gap-4">
 			{#if !isMobile}
-				<div class="flex items-center gap-4 w-full max-w-sm">
+				<div class="flex w-full max-w-sm items-center gap-4">
 					<ModeToggle />
 					<Searchbar />
 					<ShoppingCartDropdownMenu />
@@ -98,11 +106,13 @@
 						{/snippet}
 					</SheetTrigger>
 					<SheetContent>
+						<SheetPrimitive.Close bind:ref={triggerCloseRef} />
 						<div class={cn('flex flex-col gap-6', isAdmin ? 'pt-6' : 'py-6')}>
 							{#each links as link}
 								<Link
 									href={link.href}
-									class="font-medium text-foreground/75 hover:text-primary dark:text-muted-foreground text-sm"
+									onclick={() => closeSheet()}
+									class="text-foreground/75 hover:text-primary dark:text-muted-foreground text-sm font-medium"
 								>
 									{link.text}
 								</Link>
@@ -114,14 +124,15 @@
 								{#each adminLinks as adminLink}
 									<Link
 										href={adminLink.url}
-										class="font-medium text-primary text-sm hover:underline hover:underline-offset-2"
+										onclick={() => closeSheet()}
+										class="text-primary text-sm font-medium hover:underline hover:underline-offset-2"
 									>
 										{adminLink.name}
 									</Link>
 								{/each}
 							</div>
 						{/if}
-						<div class="flex flex-col items-center gap-6 pb-6 w-full">
+						<div class="flex w-full flex-col items-center gap-6 pb-6">
 							<div class="flex items-center gap-6">
 								<ModeToggle />
 								<ShoppingCartDropdownMenu />

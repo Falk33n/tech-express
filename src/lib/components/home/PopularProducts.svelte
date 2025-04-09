@@ -31,11 +31,12 @@
 		)}
 	>
 		{#if !isProductsEmpty}
-			{#each randomFourProducts as { id, imageUrl, quantity, imageDescription, name, price } (imageUrl)}
+			{#each randomFourProducts as { id, imageUrl, category, quantity, imageDescription, name, price } (imageUrl)}
 				<ProductsCard
 					src={imageUrl}
 					alt={imageDescription}
 					href={`/products/${id}`}
+					{category}
 					{price}
 					{name}
 					{id}

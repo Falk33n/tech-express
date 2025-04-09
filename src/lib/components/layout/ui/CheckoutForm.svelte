@@ -30,7 +30,8 @@
 		$formData.cardHolder === '' ||
 			$formData.expiryDate === '' ||
 			$formData.cardNumber === '' ||
-			$formData.cvv === '',
+			$formData.cvv === '' ||
+			$formData.email === '',
 	);
 
 	const handleSubmit = async (e: SubmitEvent) => {
@@ -55,6 +56,26 @@
 >
 	<FormField
 		{form}
+		name="email"
+		class="w-full"
+	>
+		<FormControl>
+			{#snippet children({ props })}
+				<FormLabel class="text-base">Email</FormLabel>
+				<Input
+					{...props}
+					placeholder="Email"
+					class="input mt-1"
+					type="email"
+					autocomplete="off"
+					bind:value={$formData.email}
+				/>
+			{/snippet}
+		</FormControl>
+		<FormFieldErrors class="text-left" />
+	</FormField>
+	<FormField
+		{form}
 		name="cardNumber"
 		class="w-full"
 	>
@@ -64,7 +85,7 @@
 				<Input
 					{...props}
 					placeholder="Card number"
-					class="mt-1 input"
+					class="input mt-1"
 					autocomplete="off"
 					bind:value={$formData.cardNumber}
 				/>

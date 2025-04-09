@@ -16,11 +16,12 @@
 	<SectionHeading>Latest Products</SectionHeading>
 	<div class={cn('container grid gap-6', !isProductsEmpty && 'md:grid-cols-3')}>
 		{#if !isProductsEmpty}
-			{#each latestThreeProducts as { id, imageUrl, quantity, imageDescription, name, price } (imageUrl)}
+			{#each latestThreeProducts as { id, imageUrl, quantity, category, imageDescription, name, price } (imageUrl)}
 				<ProductsCard
 					src={imageUrl}
 					alt={imageDescription}
 					href={`/products/${id}`}
+					{category}
 					{price}
 					{name}
 					{id}
