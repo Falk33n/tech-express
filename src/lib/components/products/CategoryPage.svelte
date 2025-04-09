@@ -21,7 +21,7 @@
 	const isProductsEmpty = productsByCategory.length < 3;
 </script>
 
-<section class="py-20 border-y w-full">
+<section class="w-full border-y py-20">
 	<SectionHeading>{capitalizedCategory}</SectionHeading>
 	<div
 		class={cn(
@@ -30,11 +30,12 @@
 		)}
 	>
 		{#if !isProductsEmpty}
-			{#each productsByCategory as { id, imageUrl, quantity, imageDescription, name, price }}
+			{#each productsByCategory as { id, imageUrl, quantity, category, imageDescription, name, price }}
 				<ProductsCard
 					src={imageUrl}
 					alt={imageDescription}
 					href={`/products/${id}`}
+					{category}
 					{price}
 					{name}
 					{id}

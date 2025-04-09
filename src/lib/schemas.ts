@@ -242,6 +242,13 @@ export const updateAccountAsAdminSchema = z.object({
 export type UpdateAccountAsAdmin = typeof updateAccountAsAdminSchema;
 
 export const purchaseSchema = z.object({
+	email: z
+		.string({
+			invalid_type_error: 'Email must be a string.',
+		})
+		.nonempty('Email cannot be empty.')
+		.email('Email is invalid.')
+		.optional(),
 	cardNumber: z
 		.string({ invalid_type_error: 'Card number must be a string' })
 		.min(16, 'Card number must be 16 digits'),

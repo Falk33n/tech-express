@@ -49,7 +49,6 @@ export const load: LayoutServerLoad = async ({
 	locals,
 }) => {
 	const cookieConsent = cookies.get('cc_c');
-	const hasAcceptedCookieConsent = cookieConsent === 'true';
 
 	let isAdmin = false;
 
@@ -63,7 +62,8 @@ export const load: LayoutServerLoad = async ({
 
 	return {
 		isAdmin,
-		hasAcceptedCookieConsent,
+		hasAcceptedCookieConsent:
+			cookieConsent === undefined ? null : Boolean(cookieConsent),
 		products: await getSortedProducts(request, url),
 		newsletterForm: await superValidate(zod(emailSchema)),
 		purschaseForm: await superValidate(zod(purchaseSchema)),

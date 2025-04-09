@@ -19,13 +19,13 @@
 
 	let isClosed = $state(hasAcceptedCookieConsent);
 
-	async function handleSubmit() {
+	async function handleSubmit(hasAccepted: boolean) {
 		const response = await fetch('/api/cookies', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ hasAccepted: true }),
+			body: JSON.stringify({ hasAccepted }),
 		});
 
 		if (!response.ok) {
@@ -44,7 +44,7 @@
 	}
 </script>
 
-{#if !isClosed}
+{#if !isClosed && hasAcceptedCookieConsent === null}
 	<Card
 		class="fixed bottom-0 left-0 z-[1000] w-full md:bottom-8 md:left-8 md:w-[550px]"
 	>
@@ -72,14 +72,24 @@
 			</CardDescription>
 		</CardHeader>
 
-		<CardContent>
+		<CardContent class="flex items-center gap-2">
 			<Button
-				class="w-full"
+				class="flex-1"
 				type="submit"
 				aria-label="Accept cookie policy"
-				onclick={() => handleSubmit()}
+				onclick={() => handleSubmit(true)}
 			>
 				Accept
+			</Button>
+
+			<Button
+				class="flex-1"
+				variant="destructive"
+				type="submit"
+				aria-label="Reject cookie policy"
+				onclick={() => handleSubmit(false)}
+			>
+				Reject
 			</Button>
 		</CardContent>
 		<CardFooter>
